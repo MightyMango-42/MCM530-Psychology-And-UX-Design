@@ -4,150 +4,192 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    private CharacterController characterController;
-    public PlayerInputActions inputActions;
+    private Rigidbody rb;
+    private PlayerInputActions inputActions;
 
     private InputAction moveAction;
-    private InputAction sprintAction;
-    private InputAction jumpAction;
     private InputAction lookAction;
-
-    private Vector3 direction;
-    private Vector3 velocity;
-    private float verticalRotation;
-    private float horizontalRotation;
+    private InputAction jumpAction;
+    private InputAction dashAction;
 
     [Header("References")]
-    [SerializeField] Camera playerCam;
+    [SerializeField] private Transform orientation;
 
     [Header("Movement Parameters")]
-    [SerializeField] private float baseSpeed;
-    [SerializeField] private float sprintSpeed;
-    private float moveSpeed;
+    [SerializeField] private float maxGroundSpeed;
+    [SerializeField] private float groundSpeed;
+    [SerializeField] private float groundDrag;
+    [SerializeField] private float airDrag;
+    [SerializeField] private float airSpeedMultiplier;
+
+    private float currentSpeed;
+    Vector3 moveDirection;
+
+    private bool allowMovement = true;
+    private bool isGrounded = true;
 
     [Header("Jump Parameters")]
-    [SerializeField] private float gravityStrength = 9.81f;
-    [SerializeField] private float jumpForce;
+    [SerializeField] private LayerMask layerMask;
+    [SerializeField] private float collisionSphereSize;
+    [SerializeField] private float maxCollisionDistance;
+    [SerializeField] private float jumpForce = 5f;
 
-    [Header("Camera Parameters")]
-    [SerializeField] private float mouseXSensitivity = 10f;
-    [SerializeField] private float mouseYSensitivity = 10f;
-    [SerializeField] private float sensMultiplier = 0.2f;
-
-    [SerializeField] private float maxRotation = 80f;
-    [SerializeField] private float minRotation = -80f;
-
-    public float currentFOV;
-
-    private void Awake()
-    {
-        inputActions = new PlayerInputActions();
-        characterController = GetComponent<CharacterController>();
-    }
+    [Header("Dash Parameters")]
+    [SerializeField] private float dashForce = 5f;
+    private bool canDash;
+    private bool hasDash;
 
     private void OnEnable()
     {
         moveAction = inputActions.Player.Move;
-        sprintAction = inputActions.Player.Sprint;
         jumpAction = inputActions.Player.Jump;
         lookAction = inputActions.Player.Look;
+        //dashAction = inputActions.Player.Dash;
 
         moveAction.Enable();
-        sprintAction.Enable();
-        jumpAction.Enable();
         lookAction.Enable();
+        jumpAction.Enable();
+        //dashAction.Enable();
 
-        sprintAction.performed += Sprint;
+        jumpAction.performed += Jump;
+        //dashAction.performed += Dash;
     }
     private void OnDisable()
     {
         moveAction.Disable();
-        sprintAction.Disable();
-        jumpAction.Disable();
         lookAction.Disable();
+        jumpAction.Disable();
+        //dashAction.Disable();
+    }
+
+    void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+        inputActions = new PlayerInputActions();
     }
 
     private void Start()
     {
-        HideCursor();
+        rb.freezeRotation = true;
     }
 
     private void Update()
     {
-        ApplyGravity();
-        HandleInputs();
-        HandleJumping();
-        HandleRotation();
-        ApplyMovement();
-    }   
+        if (!allowMovement) return;
+        
+        HandlePlayerInput();
+        AddPlayerDrag();
+        //HandleDashing();
+        HandlePlayerSpeed();
+    }
 
-    private void HandleInputs()
+    private void FixedUpdate()
     {
-        moveSpeed = (sprintAction.inProgress ? sprintSpeed : baseSpeed);
+        isGrounded = GroundCheck();
+        HandleMovement();
+    }
 
+    public void Freeze()
+    {
+        allowMovement = false;
+        rb.useGravity = false;
+    }
+    public void UnFreeze()
+    {
+        allowMovement = true;
+        rb.useGravity = true;
+    }
+
+    private void HandlePlayerInput()
+    {
         Vector2 moveInputVector = moveAction.ReadValue<Vector2>();
-
-        direction = transform.forward * moveInputVector.y + transform.right * moveInputVector.x;
-        direction.Normalize();
-
-        velocity.x = direction.x * moveSpeed;
-        velocity.z = direction.z * moveSpeed;
+        moveDirection = orientation.forward * moveInputVector.y + orientation.right * moveInputVector.x;
+        moveDirection.Normalize();
     }
 
-    private void ApplyMovement()
+    private void AddPlayerDrag()
     {
-        characterController.Move(velocity * Time.deltaTime);
+        if (isGrounded) rb.linearDamping = groundDrag;
+        else rb.linearDamping = airDrag;
     }
-
-    private void HandleJumping()
+ 
+    private void HandleMovement()
     {
-        // Apply a small force if the character controller is grounded to prevent isGrounded true/false inaccuraccies
-        if (characterController.isGrounded)
+        if (isGrounded)
+        { 
+            currentSpeed = groundSpeed;
+            rb.AddForce(moveDirection * currentSpeed, ForceMode.Force);
+        }
+        else if (!isGrounded)
         {
-            velocity.y = 0;
-            velocity.y -= 1f;
-
-            if (jumpAction.WasPressedThisFrame())
-            {
-                velocity.y = jumpForce;
-            }
+            currentSpeed = groundSpeed / 2;
+            rb.AddForce(moveDirection * currentSpeed * airSpeedMultiplier, ForceMode.Force);
         }
     }
 
-    private void ApplyGravity()
+    private void HandlePlayerSpeed()
     {
-        velocity.y -= gravityStrength * Time.deltaTime;
+        if (isGrounded)
+        {
+            LimitSpeedTo(maxGroundSpeed);
+        }
     }
 
-    private void Sprint(InputAction.CallbackContext context)
+    private void LimitSpeedTo(float maxSpeed)
     {
-        moveSpeed = sprintSpeed;
+        Vector3 flatVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+
+        // Check if the magnitude of the player's velocity is greater than the max speed
+        // If it is, normalise it and apply it to the rb.linearVelocity's X and Z
+
+        if (flatVelocity.magnitude > maxSpeed)
+        {
+            Vector3 limitedVelocity = flatVelocity.normalized * maxSpeed;
+            rb.linearVelocity = new Vector3(limitedVelocity.x, rb.linearVelocity.y, limitedVelocity.z);
+        }
     }
 
-    public void HideCursor()
+    private bool GroundCheck()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        // Cast a sphere to the ground, if it hits the specified ground layer stored within the layermask, it will return true
+
+        if (Physics.SphereCast(transform.position, collisionSphereSize, -transform.up, out RaycastHit hit, maxCollisionDistance, layerMask))
+        {
+            return true;
+        }
+        else return false;
     }
 
-    public void ShowCursor()
+    private void Jump(InputAction.CallbackContext context)
     {
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        if (isGrounded)
+        {
+            //rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+            rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        }
     }
 
-    private void HandleRotation()
+    private void HandleDashing()
     {
-        Vector2 lookInput = lookAction.ReadValue<Vector2>();
+        if (hasDash && !isGrounded)
+        {
+            canDash = true;
+        }
+        else if (!hasDash)
+        {
+            canDash = false;
+        }
 
-        horizontalRotation += lookInput.x * sensMultiplier * mouseXSensitivity;
-        verticalRotation -= lookInput.y * sensMultiplier * mouseYSensitivity;
+        if (isGrounded)
+        {
+            hasDash = true;
+            canDash = false;
+        }
+    }
 
-        // Rotate Player on Y axis
-        transform.rotation = Quaternion.Euler(0, horizontalRotation, 0);
-
-        // Rotate Camera on X and Y axis
-        verticalRotation = Mathf.Clamp(verticalRotation, minRotation, maxRotation);
-        playerCam.transform.localRotation = Quaternion.Euler(verticalRotation, 0, 0);
+    private void Dash()
+    {
+        //rb.AddForce(playerCam.transform.forward * dashForce, ForceMode.Impulse);
+        hasDash = false;
     }
 }
