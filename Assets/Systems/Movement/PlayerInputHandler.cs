@@ -45,14 +45,14 @@ public class PlayerInputHandler : MonoBehaviour
         moveAction = defaultActionMap.FindAction(move);
         lookAction = defaultActionMap.FindAction(look);
         jumpAction = defaultActionMap.FindAction(jump);
-        //slideAction = defaultActionMap.FindAction(slide);
+        slideAction = defaultActionMap.FindAction(slide);
     }
     private void OnEnable()
     {
         moveAction.Enable();
         lookAction.Enable();
         jumpAction.Enable();
-        //slideAction.Enable();
+        slideAction.Enable();
 
         AddContexts();
     }
@@ -61,7 +61,7 @@ public class PlayerInputHandler : MonoBehaviour
         moveAction.Disable();
         lookAction.Disable();
         jumpAction.Disable();
-        //slideAction.Disable();
+        slideAction.Disable();
     }
 
     private void AddContexts()
@@ -75,7 +75,7 @@ public class PlayerInputHandler : MonoBehaviour
         jumpAction.performed += context => JumpTriggered = true;
         jumpAction.canceled += context => JumpTriggered = false;
 
-        //slideAction.performed += context => SlideTriggered = true;
-        //slideAction.canceled += context => SlideTriggered = false;
+        slideAction.performed += context => SlideTriggered = true;
+        slideAction.canceled += context => SlideTriggered = false;
     }
 }

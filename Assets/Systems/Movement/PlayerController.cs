@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,7 +14,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform orientation;
 
     [Header("Movement Parameters")]
-    [SerializeField] private float maxGroundSpeed;
     [SerializeField] private float groundSpeed;
     [SerializeField] private float groundDrag;
     [SerializeField] private float airDrag;
@@ -45,6 +45,10 @@ public class PlayerController : MonoBehaviour
     private bool canRunRight;
     private bool isWallRunning;
 
+    [Header("Slide Parameters")]
+    [SerializeField] private float slideForce;
+    private bool isSliding;
+
     [Header("Dash Parameters")]
     [SerializeField] private float dashForce = 5f;
     private bool canDash;
@@ -68,8 +72,9 @@ public class PlayerController : MonoBehaviour
         
         HandlePlayerInput();
         AddPlayerDrag();
+        HandleSliding();
         HandleWallRunning();
-        HandlePlayerSpeed();
+        LimitSpeed();
     }
 
     private void FixedUpdate()
@@ -116,24 +121,16 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void HandlePlayerSpeed()
-    {
-        if (isGrounded)
-        {
-            LimitSpeedTo(maxGroundSpeed);
-        }
-    }
-
-    private void LimitSpeedTo(float maxSpeed)
+    private void LimitSpeed()
     {
         Vector3 flatVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 
         // Check if the magnitude of the player's velocity is greater than the max speed
         // If it is, normalise it and apply it to the rb.linearVelocity's X and Z
 
-        if (flatVelocity.magnitude > maxSpeed)
+        if (flatVelocity.magnitude > currentSpeed)
         {
-            Vector3 limitedVelocity = flatVelocity.normalized * maxSpeed;
+            Vector3 limitedVelocity = flatVelocity.normalized * currentSpeed;
             rb.linearVelocity = new Vector3(limitedVelocity.x, rb.linearVelocity.y, limitedVelocity.z);
         }
     }
@@ -191,8 +188,6 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(wallForward * wallRunSpeed, ForceMode.Force);
 
             if (inputHandler.JumpTriggered) WallJump();
-            //if (canRunLeft) moveDirection = new Vector3(wallForward.x * wallRunSpeed, 0, wallForward.z * wallRunSpeed);
-            //else if (canRunRight) moveDirection = new Vector3(-wallForward.x * wallRunSpeed, 0, -wallForward.z * wallRunSpeed);
         }
         else if (!CheckCanWallRun()) ExitWallRun();
     }
@@ -207,6 +202,24 @@ public class PlayerController : MonoBehaviour
         // Apply the force, dont need to reset yVelocity as it is already done in HandleWallRunning()
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
         rb.AddForce(jumpDirection, ForceMode.Impulse);
+    }
+
+    private void HandleSliding()
+    {
+        if (!isGrounded || isSliding) return;
+
+        if ((moveDirection.x > 0 || moveDirection.z > 0) && inputHandler.SlideTriggered) Slide();
+    }
+
+    private void Slide()
+    {
+        Debug.Log("Sliding");
+        rb.AddForce(moveDirection * slideForce, ForceMode.Force);
+    }
+
+    private void ExitSlide()
+    {
+
     }
 
     private void HandleDashing()
