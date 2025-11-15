@@ -18,15 +18,15 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] private string jump;
     [SerializeField] private string slide;
 
-    private InputAction moveAction;
-    private InputAction lookAction;
-    private InputAction jumpAction;
-    private InputAction slideAction;
+    public InputAction moveAction;
+    public InputAction lookAction;
+    public InputAction jumpAction;
+    public InputAction slideAction;
 
-    public Vector2 moveInputVector { get; private set; }
-    public Vector2 lookInputVector { get; private set; }
-    public bool jumpTriggered { get; private set; }
-    public bool slideTriggered { get; private set; }
+    public Vector2 MoveInputVector { get; private set; }
+    public Vector2 LookInputVector { get; private set; }
+    public bool JumpTriggered { get; private set; }
+    public bool SlideTriggered { get; private set; }
 
     private void Awake()
     {
@@ -66,16 +66,16 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void AddContexts()
     {
-        moveAction.performed += context => moveInputVector = context.ReadValue<Vector2>();
-        moveAction.canceled += context => moveInputVector = Vector2.zero;
+        moveAction.performed += context => MoveInputVector = context.ReadValue<Vector2>();
+        moveAction.canceled += context => MoveInputVector = Vector2.zero;
 
-        lookAction.performed += context => lookInputVector = context.ReadValue<Vector2>();
-        lookAction.canceled += context => lookInputVector = Vector2.zero;
+        lookAction.performed += context => LookInputVector = context.ReadValue<Vector2>();
+        lookAction.canceled += context => LookInputVector = Vector2.zero;
 
-        jumpAction.performed += context => jumpTriggered = true;
-        jumpAction.canceled += context => jumpTriggered = false;
+        jumpAction.performed += context => JumpTriggered = true;
+        jumpAction.canceled += context => JumpTriggered = false;
 
-        //slideAction.performed += context => slideTriggered = true;
-        //slideAction.canceled += context => slideTriggered = false;
+        //slideAction.performed += context => SlideTriggered = true;
+        //slideAction.canceled += context => SlideTriggered = false;
     }
 }

@@ -53,8 +53,8 @@ public class CameraController : MonoBehaviour
 
     private void HandleRotation()
     {
-        horizontalRotation += inputHandler.lookInputVector.x * sensMultiplier * mouseXSensitivity;
-        verticalRotation -= inputHandler.lookInputVector.y * sensMultiplier * mouseYSensitivity;
+        horizontalRotation += inputHandler.LookInputVector.x * sensMultiplier * mouseXSensitivity;
+        verticalRotation -= inputHandler.LookInputVector.y * sensMultiplier * mouseYSensitivity;
 
         // Rotate Player on Y axis
         playerOrientation.rotation = Quaternion.Euler(0, horizontalRotation, 0);

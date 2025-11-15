@@ -284,6 +284,13 @@ MonoBehaviour:
   collisionSphereSize: 0.5
   maxCollisionDistance: 0.5
   jumpForce: 10
+  wallrunLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  wallRunSpeed: 6
+  wallCheckDistance: 0.7
+  wallJumpUpForce: 1
+  wallJumpSideForce: 1
   dashForce: 5
 --- !u!4 &457728288
 Transform:
@@ -395,7 +402,7 @@ GameObject:
   - component: {fileID: 552690961}
   - component: {fileID: 552690960}
   - component: {fileID: 552690959}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wall (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -503,7 +510,7 @@ GameObject:
   - component: {fileID: 562833372}
   - component: {fileID: 562833371}
   - component: {fileID: 562833370}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -990,7 +997,7 @@ GameObject:
   - component: {fileID: 1967136671}
   - component: {fileID: 1967136670}
   - component: {fileID: 1967136669}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wall (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

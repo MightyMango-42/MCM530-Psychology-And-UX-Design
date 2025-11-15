@@ -1,16 +1,13 @@
 using System;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    private Rigidbody rb;
-    private PlayerInputActions inputActions;
+    private PlayerInputHandler inputHandler;
 
-    private InputAction moveAction;
-    private InputAction lookAction;
-    private InputAction jumpAction;
-    private InputAction dashAction;
+    private Rigidbody rb;
 
     [Header("References")]
     [SerializeField] private Transform orientation;
@@ -34,43 +31,35 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxCollisionDistance;
     [SerializeField] private float jumpForce = 5f;
 
+    [Header("Wall Run Parameters")]
+    [SerializeField] LayerMask wallrunLayer;
+    [SerializeField] private float wallRunSpeed;
+    [SerializeField] private float wallCheckDistance;
+
+    [Header("Wall Run Jump Parameters")]
+    [SerializeField] private float wallJumpUpForce;
+    [SerializeField] private float wallJumpSideForce;
+    private RaycastHit leftWallHit;
+    private RaycastHit rightWallHit;
+    private bool canRunLeft;
+    private bool canRunRight;
+    private bool isWallRunning;
+
     [Header("Dash Parameters")]
     [SerializeField] private float dashForce = 5f;
     private bool canDash;
     private bool hasDash;
 
-    private void OnEnable()
-    {
-        moveAction = inputActions.Player.Move;
-        jumpAction = inputActions.Player.Jump;
-        lookAction = inputActions.Player.Look;
-        //dashAction = inputActions.Player.Dash;
-
-        moveAction.Enable();
-        lookAction.Enable();
-        jumpAction.Enable();
-        //dashAction.Enable();
-
-        jumpAction.performed += Jump;
-        //dashAction.performed += Dash;
-    }
-    private void OnDisable()
-    {
-        moveAction.Disable();
-        lookAction.Disable();
-        jumpAction.Disable();
-        //dashAction.Disable();
-    }
-
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        inputActions = new PlayerInputActions();
     }
 
     private void Start()
     {
+        inputHandler = PlayerInputHandler.Instance;
         rb.freezeRotation = true;
+        inputHandler.jumpAction.performed += Jump;
     }
 
     private void Update()
@@ -79,7 +68,7 @@ public class PlayerController : MonoBehaviour
         
         HandlePlayerInput();
         AddPlayerDrag();
-        //HandleDashing();
+        HandleWallRunning();
         HandlePlayerSpeed();
     }
 
@@ -102,7 +91,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandlePlayerInput()
     {
-        Vector2 moveInputVector = moveAction.ReadValue<Vector2>();
+        Vector2 moveInputVector = inputHandler.MoveInputVector;
         moveDirection = orientation.forward * moveInputVector.y + orientation.right * moveInputVector.x;
         moveDirection.Normalize();
     }
@@ -164,9 +153,60 @@ public class PlayerController : MonoBehaviour
     {
         if (isGrounded)
         {
-            //rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
         }
+    }
+    private bool CheckCanWallRun()
+    {
+        canRunLeft = Physics.Raycast(transform.position, -orientation.right, out leftWallHit, wallCheckDistance, wallrunLayer);
+        canRunRight = Physics.Raycast(transform.position, orientation.right, out rightWallHit, wallCheckDistance, wallrunLayer);
+
+        if (canRunLeft || canRunRight) return true;
+        return false;
+    }
+
+    private void EnterWallRun()
+    {
+        isWallRunning = true;
+        rb.useGravity = false;
+    }
+
+    private void ExitWallRun()
+    {
+        isWallRunning = false;
+        rb.useGravity = true;
+    }
+    private void HandleWallRunning()
+    {
+        if (CheckCanWallRun())
+        {
+            EnterWallRun();
+
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+
+            Vector3 wallNormal = canRunRight ? -rightWallHit.normal : leftWallHit.normal;
+            Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
+
+            rb.AddForce(wallForward * wallRunSpeed, ForceMode.Force);
+
+            if (inputHandler.JumpTriggered) WallJump();
+            //if (canRunLeft) moveDirection = new Vector3(wallForward.x * wallRunSpeed, 0, wallForward.z * wallRunSpeed);
+            //else if (canRunRight) moveDirection = new Vector3(-wallForward.x * wallRunSpeed, 0, -wallForward.z * wallRunSpeed);
+        }
+        else if (!CheckCanWallRun()) ExitWallRun();
+    }
+
+    private void WallJump()
+    {
+        // Get the wall normal, obtain the jump direction force by multiplying each transform direction
+        // Lets the player jump off of a wall forwards at a diagonal angle away from the wall normal
+        Vector3 wallNormal = canRunRight ? rightWallHit.normal : leftWallHit.normal;
+        Vector3 jumpDirection = transform.up * wallJumpUpForce + wallNormal * wallJumpSideForce;
+
+        // Apply the force, dont need to reset yVelocity as it is already done in HandleWallRunning()
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+        rb.AddForce(jumpDirection, ForceMode.Impulse);
     }
 
     private void HandleDashing()
