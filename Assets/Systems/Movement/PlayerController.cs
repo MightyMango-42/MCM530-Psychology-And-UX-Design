@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private Transform orientation;
+    [SerializeField] private GameObject playerHUD;
+    private PlayerHUDManager playerHUDManager;
 
     [Header("Movement Parameters")]
     [SerializeField] private float groundSpeed;
@@ -19,8 +21,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float airDrag;
     [SerializeField] private float airSpeedMultiplier;
 
+    private float travelSpeed;
     private float currentSpeed;
     Vector3 moveDirection;
+    Vector3 lastPosition;
 
     private bool allowMovement = true;
     private bool isGrounded = true;
@@ -33,7 +37,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Wall Run Parameters")]
     [SerializeField] LayerMask wallrunLayer;
-    [SerializeField] private float wallRunSpeed;
+    [SerializeField] private float wallRunForce;
     [SerializeField] private float wallCheckDistance;
 
     [Header("Wall Run Jump Parameters")]
@@ -57,11 +61,13 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        playerHUDManager = playerHUD.GetComponent<PlayerHUDManager>();
     }
 
     private void Start()
     {
         inputHandler = PlayerInputHandler.Instance;
+
         rb.freezeRotation = true;
         inputHandler.jumpAction.performed += Jump;
     }
@@ -69,12 +75,14 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         if (!allowMovement) return;
-        
+
+        CalculateSpeed();
         HandlePlayerInput();
         AddPlayerDrag();
         HandleSliding();
         HandleWallRunning();
         LimitSpeed();
+        UpdateHUD();
     }
 
     private void FixedUpdate()
@@ -111,13 +119,13 @@ public class PlayerController : MonoBehaviour
     {
         if (isGrounded)
         { 
-            currentSpeed = groundSpeed;
-            rb.AddForce(moveDirection * currentSpeed, ForceMode.Force);
+            travelSpeed = groundSpeed;
+            rb.AddForce(moveDirection * travelSpeed, ForceMode.Force);
         }
         else if (!isGrounded)
         {
-            currentSpeed = groundSpeed / 2;
-            rb.AddForce(moveDirection * currentSpeed * airSpeedMultiplier, ForceMode.Force);
+            travelSpeed = groundSpeed / 2;
+            rb.AddForce(moveDirection * travelSpeed * airSpeedMultiplier, ForceMode.Force);
         }
     }
 
@@ -128,9 +136,9 @@ public class PlayerController : MonoBehaviour
         // Check if the magnitude of the player's velocity is greater than the max speed
         // If it is, normalise it and apply it to the rb.linearVelocity's X and Z
 
-        if (flatVelocity.magnitude > currentSpeed)
+        if (flatVelocity.magnitude > travelSpeed)
         {
-            Vector3 limitedVelocity = flatVelocity.normalized * currentSpeed;
+            Vector3 limitedVelocity = flatVelocity.normalized * travelSpeed;
             rb.linearVelocity = new Vector3(limitedVelocity.x, rb.linearVelocity.y, limitedVelocity.z);
         }
     }
@@ -185,7 +193,7 @@ public class PlayerController : MonoBehaviour
             Vector3 wallNormal = canRunRight ? -rightWallHit.normal : leftWallHit.normal;
             Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
 
-            rb.AddForce(wallForward * wallRunSpeed, ForceMode.Force);
+            rb.AddForce(wallForward * wallRunForce, ForceMode.Force);
 
             if (inputHandler.JumpTriggered) WallJump();
         }
@@ -220,6 +228,18 @@ public class PlayerController : MonoBehaviour
     private void ExitSlide()
     {
 
+    }
+
+    private void CalculateSpeed()
+    {
+        float distance = Vector3.Distance(lastPosition, transform.position);
+        currentSpeed = distance / Time.deltaTime;
+        lastPosition = transform.position;
+    }
+
+    private void UpdateHUD()
+    {
+        playerHUDManager.SetPlayerSpeed(currentSpeed);
     }
 
     private void HandleDashing()
