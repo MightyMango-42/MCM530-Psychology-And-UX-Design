@@ -1,24 +1,39 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
     PlayerController player;
-    private int score;
+    public int TotalScore { get; private set; }
+
+    [SerializeField] private Vector3 spawnPoint = new Vector3(0, 1.1f, 0);
+
+    [Header("Level Contents")]
+    [SerializeField] private List<CollectableOrb> collectables;
 
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
     }
 
-    private void OnLevelEnd()
+    public void RespawnPlayer()
     {
-        score = CalculateLevelScore();
+        player.Kill();
+        player.transform.position = spawnPoint;
+    }
+
+    public void EndLevel()
+    {
+        TotalScore = CalculateLevelScore();
+        Debug.Log("Reached End of Level");
     }
 
     private int CalculateLevelScore()
     {
         int calculatedScore = player.score;
-        float levelTime = player.time;
+        float levelTime = player.playTime;
+
+        // Do calculation
 
         return calculatedScore;
     }

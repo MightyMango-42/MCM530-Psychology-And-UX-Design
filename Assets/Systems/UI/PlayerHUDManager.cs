@@ -30,7 +30,6 @@ public class PlayerHUDManager : MonoBehaviour
 
     private void Update()
     {
-        //playerTimerText.text = $"Time: {currentTime}";
         playerSpeedText.text = $"Speed: {Math.Round(playerSpeed, 2)}m/s";
     }
 

@@ -10,11 +10,13 @@ public class PlayerController : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private Transform orientation;
+    [SerializeField] private CameraController cameraController;
     public PlayerHUDManager playerHUDManager;
 
     [Header("Info")]
     public int score = 0;
-    public float time = 0f;
+    public float playTime = 0f;
+    public int deathCount = 0;
     private float playerHeight;
 
     [Header("Movement Parameters")]
@@ -83,13 +85,14 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        time += Time.deltaTime;
+        playTime += Time.deltaTime;
         if (!allowMovement) return;
 
         CalculateSpeed();
+        PassInCameraData();
         HandlePlayerInput();
         AddPlayerDrag();
-        LimitSpeed();
+        LimitSpeed(travelSpeed);
         UpdateHUD();
     }
 
@@ -109,6 +112,11 @@ public class PlayerController : MonoBehaviour
     {
         allowMovement = true;
         rb.useGravity = true;
+    }
+
+    public void Kill()
+    {
+        deathCount++;
     }
 
     private void HandlePlayerInput()
@@ -138,14 +146,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void LimitSpeed()
+    private void LimitSpeed(float maxSpeed)
     {
         Vector3 flatVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 
         // Check if the magnitude of the player's velocity is greater than the max speed
         // If it is, normalise it and apply it to the rb.linearVelocity's X and Z
 
-        if (flatVelocity.magnitude > travelSpeed)
+        if (flatVelocity.magnitude > maxSpeed)
         {
             Vector3 limitedVelocity = flatVelocity.normalized * travelSpeed;
             rb.linearVelocity = new Vector3(limitedVelocity.x, rb.linearVelocity.y, limitedVelocity.z);
@@ -173,6 +181,8 @@ public class PlayerController : MonoBehaviour
     }
     private bool CheckCanWallRun()
     {
+        if (isSliding) return false;
+
         canRunLeft = Physics.Raycast(transform.position, -orientation.right, out leftWallHit, wallCheckDistance, wallrunLayer);
         canRunRight = Physics.Raycast(transform.position, orientation.right, out rightWallHit, wallCheckDistance, wallrunLayer);
 
@@ -218,21 +228,31 @@ public class PlayerController : MonoBehaviour
 
         // Apply the force, dont need to reset yVelocity as it is already done in HandleWallRunning()
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
-        rb.AddForce(jumpDirection , ForceMode.Impulse);
+        rb.AddForce(jumpDirection * Time.fixedDeltaTime * (generalForceMultiplier / 4), ForceMode.Impulse);
     }
 
     private void Slide(InputAction.CallbackContext context)
     {
         if (!(moveDirection.x > 0 || moveDirection.z > 0)) return;
-        if (!isGrounded || isSliding) return;
+        if (isWallRunning) return;
+
+        isSliding = true;
+        allowMovement = false;
 
         transform.localScale = new Vector3 (transform.localScale.x, slideHeight, transform.localScale.z);
-        rb.AddForce(moveDirection * slideForce * Time.fixedDeltaTime * generalForceMultiplier, ForceMode.Force);
+        rb.AddForce(moveDirection * slideForce * Time.fixedDeltaTime, ForceMode.Force);
     }
 
     private void ExitSlide(InputAction.CallbackContext context)
     {
+        isSliding = false;
         transform.localScale = new Vector3(transform.localScale.x, playerHeight, transform.localScale.z);
+        allowMovement = true;
+    }
+
+    private void PassInCameraData()
+    {
+        cameraController.SetSpeedEffect(currentSpeed, 10);
     }
 
     private void CalculateSpeed()
@@ -244,7 +264,7 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateHUD()
     {
-        playerHUDManager.UpdateTimer(time);
+        playerHUDManager.UpdateTimer(playTime);
         playerHUDManager.SetPlayerSpeed(currentSpeed);
     }
 

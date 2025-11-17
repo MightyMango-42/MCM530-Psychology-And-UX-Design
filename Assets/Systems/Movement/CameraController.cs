@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,14 +18,22 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float sensMultiplier;
     [SerializeField] private float maxRotation;
     [SerializeField] private float minRotation;
+    [SerializeField] private float yOffset;
 
     private float verticalRotation;
     private float horizontalRotation;
+
+    [Header("FOV Settings")]
+    [SerializeField] private float baseFOV;
+    [SerializeField] private float maxFOV;
+    private float playerSpeed;
+    private float playerMinSpeed;
 
     void Start()
     {
         inputHandler = PlayerInputHandler.Instance;
         playerCam = GetComponent<Camera>();
+        playerCam.fieldOfView = baseFOV;
         HideCursor();
     }
 
@@ -32,6 +41,7 @@ public class CameraController : MonoBehaviour
     {
         HandleRotation();
         UpdateCameraPosition();
+        UpdateFOV();
     }
 
     public void HideCursor()
@@ -66,6 +76,26 @@ public class CameraController : MonoBehaviour
 
     private void UpdateCameraPosition()
     {
-        transform.position = playerOrientation.position;
+        transform.position = new Vector3(playerOrientation.position.x, playerOrientation.position.y + yOffset, playerOrientation.position.z);
+    }
+
+    private void UpdateFOV()
+    {
+        if (playerSpeed < playerMinSpeed)
+        {
+            playerCam.fieldOfView = baseFOV;
+            return;
+        }
+
+        float fovToAdd = (playerSpeed - playerMinSpeed) * 1.2f;
+        if (baseFOV + fovToAdd > maxFOV) return;
+
+        playerCam.fieldOfView = baseFOV + fovToAdd;
+    }
+
+    public void SetSpeedEffect(float speed, float minSpeed)
+    {
+        playerSpeed = speed;
+        playerMinSpeed = minSpeed;
     }
 }
