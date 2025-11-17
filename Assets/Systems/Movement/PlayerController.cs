@@ -1,6 +1,4 @@
 using System;
-using System.Threading;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,14 +10,19 @@ public class PlayerController : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private Transform orientation;
-    [SerializeField] private GameObject playerHUD;
-    private PlayerHUDManager playerHUDManager;
+    public PlayerHUDManager playerHUDManager;
+
+    [Header("Info")]
+    public int score = 0;
+    public float time = 0f;
+    private float playerHeight;
 
     [Header("Movement Parameters")]
     [SerializeField] private float groundSpeed;
     [SerializeField] private float groundDrag;
     [SerializeField] private float airDrag;
     [SerializeField] private float airSpeedMultiplier;
+    [SerializeField] private float generalForceMultiplier;
 
     private float travelSpeed;
     private float currentSpeed;
@@ -33,7 +36,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask layerMask;
     [SerializeField] private float collisionSphereSize;
     [SerializeField] private float maxCollisionDistance;
-    [SerializeField] private float jumpForce = 5f;
+    [SerializeField] private float jumpForce;
 
     [Header("Wall Run Parameters")]
     [SerializeField] LayerMask wallrunLayer;
@@ -51,6 +54,8 @@ public class PlayerController : MonoBehaviour
 
     [Header("Slide Parameters")]
     [SerializeField] private float slideForce;
+    [SerializeField] private float slideTime;
+    [SerializeField] private float slideHeight;
     private bool isSliding;
 
     [Header("Dash Parameters")]
@@ -61,7 +66,6 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        playerHUDManager = playerHUD.GetComponent<PlayerHUDManager>();
     }
 
     private void Start()
@@ -69,18 +73,22 @@ public class PlayerController : MonoBehaviour
         inputHandler = PlayerInputHandler.Instance;
 
         rb.freezeRotation = true;
+
         inputHandler.jumpAction.performed += Jump;
+        inputHandler.slideAction.performed += Slide;
+        inputHandler.slideAction.canceled += ExitSlide;
+
+        playerHeight = transform.localScale.y;
     }
 
     private void Update()
     {
+        time += Time.deltaTime;
         if (!allowMovement) return;
 
         CalculateSpeed();
         HandlePlayerInput();
         AddPlayerDrag();
-        HandleSliding();
-        HandleWallRunning();
         LimitSpeed();
         UpdateHUD();
     }
@@ -89,6 +97,7 @@ public class PlayerController : MonoBehaviour
     {
         isGrounded = GroundCheck();
         HandleMovement();
+        HandleWallRunning();
     }
 
     public void Freeze()
@@ -193,7 +202,7 @@ public class PlayerController : MonoBehaviour
             Vector3 wallNormal = canRunRight ? -rightWallHit.normal : leftWallHit.normal;
             Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
 
-            rb.AddForce(wallForward * wallRunForce, ForceMode.Force);
+            rb.AddForce(wallForward * wallRunForce * Time.fixedDeltaTime * generalForceMultiplier, ForceMode.Force);
 
             if (inputHandler.JumpTriggered) WallJump();
         }
@@ -209,25 +218,21 @@ public class PlayerController : MonoBehaviour
 
         // Apply the force, dont need to reset yVelocity as it is already done in HandleWallRunning()
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
-        rb.AddForce(jumpDirection, ForceMode.Impulse);
+        rb.AddForce(jumpDirection , ForceMode.Impulse);
     }
 
-    private void HandleSliding()
+    private void Slide(InputAction.CallbackContext context)
     {
+        if (!(moveDirection.x > 0 || moveDirection.z > 0)) return;
         if (!isGrounded || isSliding) return;
 
-        if ((moveDirection.x > 0 || moveDirection.z > 0) && inputHandler.SlideTriggered) Slide();
+        transform.localScale = new Vector3 (transform.localScale.x, slideHeight, transform.localScale.z);
+        rb.AddForce(moveDirection * slideForce * Time.fixedDeltaTime * generalForceMultiplier, ForceMode.Force);
     }
 
-    private void Slide()
+    private void ExitSlide(InputAction.CallbackContext context)
     {
-        Debug.Log("Sliding");
-        rb.AddForce(moveDirection * slideForce, ForceMode.Force);
-    }
-
-    private void ExitSlide()
-    {
-
+        transform.localScale = new Vector3(transform.localScale.x, playerHeight, transform.localScale.z);
     }
 
     private void CalculateSpeed()
@@ -239,6 +244,7 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateHUD()
     {
+        playerHUDManager.UpdateTimer(time);
         playerHUDManager.SetPlayerSpeed(currentSpeed);
     }
 

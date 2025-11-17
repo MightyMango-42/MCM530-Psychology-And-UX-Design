@@ -12,11 +12,11 @@ public class CameraController : MonoBehaviour
     private Camera playerCam;
 
     [Header("Camera Parameters")]
-    [SerializeField] private float mouseXSensitivity = 10f;
-    [SerializeField] private float mouseYSensitivity = 10f;
-    [SerializeField] private float sensMultiplier = 0.2f;
-    [SerializeField] private float maxRotation = 80f;
-    [SerializeField] private float minRotation = -80f;
+    [SerializeField] private float xSensitivity;
+    [SerializeField] private float ySensitivity;
+    [SerializeField] private float sensMultiplier;
+    [SerializeField] private float maxRotation;
+    [SerializeField] private float minRotation;
 
     private float verticalRotation;
     private float horizontalRotation;
@@ -53,8 +53,8 @@ public class CameraController : MonoBehaviour
 
     private void HandleRotation()
     {
-        horizontalRotation += inputHandler.LookInputVector.x * sensMultiplier * mouseXSensitivity;
-        verticalRotation -= inputHandler.LookInputVector.y * sensMultiplier * mouseYSensitivity;
+        horizontalRotation += inputHandler.LookInputVector.x * sensMultiplier * xSensitivity * Time.deltaTime;
+        verticalRotation -= inputHandler.LookInputVector.y * sensMultiplier * ySensitivity * Time.deltaTime;
 
         // Rotate Player on Y axis
         playerOrientation.rotation = Quaternion.Euler(0, horizontalRotation, 0);
