@@ -14,6 +14,7 @@ public class LevelManager : MonoBehaviour
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        player.transform.position = spawnPoint;
     }
 
     public void RespawnPlayer()
