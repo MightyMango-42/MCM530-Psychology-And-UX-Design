@@ -35,18 +35,28 @@ public class GameManager : MonoBehaviour
 
     public void LoadMainMenu()
     {
+        UnlockCursor();
         SceneManager.LoadScene("Main Menu");
-
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
     }
 
     public void LoadScene(string sceneToLoad)
     {
+        LockCursor();
         ResumeGame();
 
         if (sceneToLoad == "MainMenu") LoadMainMenu();
 
         SceneManager.LoadScene(sceneToLoad);
+    }
+
+    public void LockCursor()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+    public void UnlockCursor()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 }

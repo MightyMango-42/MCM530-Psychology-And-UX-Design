@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] LayerMask wallrunLayer;
     [SerializeField] private float wallRunForce;
     [SerializeField] private float wallCheckDistance;
+    [SerializeField] private float wallRunMaxSpeed;
 
     [Header("Wall Run Jump Parameters")]
     [SerializeField] private float wallJumpUpForce;
@@ -212,7 +213,7 @@ public class PlayerController : MonoBehaviour
             Vector3 wallNormal = canRunRight ? -rightWallHit.normal : leftWallHit.normal;
             Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
 
-            rb.AddForce(wallForward * wallRunForce * Time.fixedDeltaTime * generalForceMultiplier, ForceMode.Force);
+            rb.AddForce(wallForward * wallRunForce * Time.deltaTime * generalForceMultiplier, ForceMode.Force);
 
             if (inputHandler.JumpTriggered) WallJump();
         }
@@ -225,10 +226,9 @@ public class PlayerController : MonoBehaviour
         // Lets the player jump off of a wall forwards at a diagonal angle away from the wall normal
         Vector3 wallNormal = canRunRight ? rightWallHit.normal : leftWallHit.normal;
         Vector3 jumpDirection = transform.up * wallJumpUpForce + wallNormal * wallJumpSideForce;
-
         // Apply the force, dont need to reset yVelocity as it is already done in HandleWallRunning()
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
-        rb.AddForce(jumpDirection * Time.fixedDeltaTime * (generalForceMultiplier / 4), ForceMode.Impulse);
+        rb.AddForce(jumpDirection * Time.deltaTime * (generalForceMultiplier / 4), ForceMode.Impulse);
     }
 
     private void Slide(InputAction.CallbackContext context)
@@ -264,7 +264,7 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateHUD()
     {
-        playerHUDManager.UpdateTimer(playTime);
+        playerHUDManager.SetTime(playTime);
         playerHUDManager.SetPlayerSpeed(currentSpeed);
     }
 

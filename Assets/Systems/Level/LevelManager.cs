@@ -25,8 +25,9 @@ public class LevelManager : MonoBehaviour
 
     public void EndLevel()
     {
-        TotalScore = CalculateLevelScore();
-        Debug.Log("Reached End of Level");
+        GameManager.Instance.LoadScene("Main Test"); // Temp
+        //TotalScore = CalculateLevelScore();
+        //GameManager.Instance.PauseGame();
     }
 
     private int CalculateLevelScore()
