@@ -73,7 +73,7 @@ public class PlayerHUDManager : MonoBehaviour
 
     public void OnQuitClicked()
     {
-        GameManager.Instance.LoadMainMenu();
+        GameManager.Instance.LoadScene("Main Menu");
     }
 
     public void SetTime(float time)
