@@ -5,7 +5,6 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     public bool GamePaused {get; private set;}
-    public LevelManager currentLevel;
 
     private void Awake()
     {
@@ -18,11 +17,6 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
-
-    private void Start()
-    {
-        currentLevel = GameObject.FindWithTag("LevelManager").GetComponent<LevelManager>();
     }
 
     public void PauseGame()

@@ -32,7 +32,6 @@ public class LevelManager : MonoBehaviour
         {
             checkpoints[i].ID = i;
         }
-
     }
 
     public void RespawnPlayer()
