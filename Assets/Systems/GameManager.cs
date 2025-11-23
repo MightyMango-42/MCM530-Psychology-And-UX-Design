@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     public void PauseGame()
     {
         GamePaused = true;
-        Time.timeScale = 0f;
+        Time.timeScale = 0;
     }
     public void ResumeGame()
     {
@@ -33,7 +33,6 @@ public class GameManager : MonoBehaviour
     {
         Application.Quit();
     }
-
 
     public void LoadScene(string sceneToLoad)
     {
