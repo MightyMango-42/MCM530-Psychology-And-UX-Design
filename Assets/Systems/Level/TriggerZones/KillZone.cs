@@ -15,7 +15,6 @@ public class KillZone : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            PlayerController player = other.gameObject.GetComponent<PlayerController>();
             levelManager.RespawnPlayer();
         }
     }
