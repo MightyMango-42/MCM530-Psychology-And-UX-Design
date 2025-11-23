@@ -60,11 +60,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float slideTime;
     [SerializeField] private float slideHeight;
     private bool isSliding;
-
-    [Header("Dash Parameters")]
-    [SerializeField] private float dashForce = 5f;
-    private bool canDash;
-    private bool hasDash;
+    private float slidingSpeed;
 
     void Awake()
     {
@@ -75,12 +71,11 @@ public class PlayerController : MonoBehaviour
     {
         inputHandler = PlayerInputHandler.Instance;
 
-        rb.freezeRotation = true;
-
         inputHandler.jumpAction.performed += Jump;
         inputHandler.slideAction.performed += Slide;
         inputHandler.slideAction.canceled += ExitSlide;
 
+        rb.freezeRotation = true;
         playerHeight = transform.localScale.y;
     }
 
@@ -107,11 +102,14 @@ public class PlayerController : MonoBehaviour
     public void Freeze()
     {
         allowMovement = false;
+        cameraController.allowMovement = false;
         rb.useGravity = false;
+        rb.linearVelocity = Vector3.zero;
     }
     public void UnFreeze()
     {
         allowMovement = true;
+        cameraController.allowMovement = true;
         rb.useGravity = true;
     }
 
@@ -122,6 +120,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandlePlayerInput()
     {
+        if (isSliding) return;
         Vector2 moveInputVector = inputHandler.MoveInputVector;
         moveDirection = orientation.forward * moveInputVector.y + orientation.right * moveInputVector.x;
         moveDirection.Normalize();
@@ -138,17 +137,19 @@ public class PlayerController : MonoBehaviour
         if (isGrounded)
         { 
             travelSpeed = groundSpeed;
-            rb.AddForce(moveDirection * travelSpeed, ForceMode.Force);
+            rb.AddForce(moveDirection * travelSpeed * Time.fixedDeltaTime * generalForceMultiplier, ForceMode.Force);
         }
-        else if (!isGrounded)
-        {
-            travelSpeed = groundSpeed / 2;
-            rb.AddForce(moveDirection * travelSpeed * airSpeedMultiplier, ForceMode.Force);
-        }
+        //else if (!isGrounded)
+        //{
+        //    travelSpeed = groundSpeed / 2;
+        //    rb.AddForce(moveDirection * travelSpeed * airSpeedMultiplier * Time.fixedDeltaTime * generalForceMultiplier, ForceMode.Force);
+        //}
     }
 
     private void LimitSpeed(float maxSpeed)
     {
+        if (isSliding) maxSpeed = slidingSpeed;
+
         Vector3 flatVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 
         // Check if the magnitude of the player's velocity is greater than the max speed
@@ -177,12 +178,12 @@ public class PlayerController : MonoBehaviour
         if (isGrounded)
         {
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
-            rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+            rb.AddForce(transform.up * jumpForce * Time.fixedDeltaTime * (generalForceMultiplier / 4), ForceMode.Impulse);
         }
     }
     private bool CheckCanWallRun()
     {
-        if (isSliding) return false;
+        if (isSliding || isGrounded) return false;
 
         canRunLeft = Physics.Raycast(transform.position, -orientation.right, out leftWallHit, wallCheckDistance, wallrunLayer);
         canRunRight = Physics.Raycast(transform.position, orientation.right, out rightWallHit, wallCheckDistance, wallrunLayer);
@@ -213,11 +214,11 @@ public class PlayerController : MonoBehaviour
             Vector3 wallNormal = canRunRight ? -rightWallHit.normal : leftWallHit.normal;
             Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
 
-            rb.AddForce(wallForward * wallRunForce * Time.deltaTime * generalForceMultiplier, ForceMode.Force);
+            rb.AddForce(wallForward * wallRunForce * Time.fixedDeltaTime * generalForceMultiplier, ForceMode.Force);
 
             if (inputHandler.JumpTriggered) WallJump();
         }
-        else if (!CheckCanWallRun()) ExitWallRun();
+        else if (!CheckCanWallRun() && allowMovement) ExitWallRun();
     }
 
     private void WallJump()
@@ -228,7 +229,7 @@ public class PlayerController : MonoBehaviour
         Vector3 jumpDirection = transform.up * wallJumpUpForce + wallNormal * wallJumpSideForce;
         // Apply the force, dont need to reset yVelocity as it is already done in HandleWallRunning()
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
-        rb.AddForce(jumpDirection * Time.deltaTime * (generalForceMultiplier / 4), ForceMode.Impulse);
+        rb.AddForce(jumpDirection * Time.fixedDeltaTime * generalForceMultiplier, ForceMode.Impulse);
     }
 
     private void Slide(InputAction.CallbackContext context)
@@ -237,10 +238,10 @@ public class PlayerController : MonoBehaviour
         if (isWallRunning) return;
 
         isSliding = true;
-        allowMovement = false;
+        slidingSpeed = currentSpeed;
 
         transform.localScale = new Vector3 (transform.localScale.x, slideHeight, transform.localScale.z);
-        rb.AddForce(moveDirection * slideForce * Time.fixedDeltaTime, ForceMode.Force);
+        rb.AddForce(moveDirection * slideForce * Time.deltaTime, ForceMode.Force);
     }
 
     private void ExitSlide(InputAction.CallbackContext context)
@@ -266,29 +267,5 @@ public class PlayerController : MonoBehaviour
     {
         playerHUDManager.SetTime(playTime);
         playerHUDManager.SetPlayerSpeed(currentSpeed);
-    }
-
-    private void HandleDashing()
-    {
-        if (hasDash && !isGrounded)
-        {
-            canDash = true;
-        }
-        else if (!hasDash)
-        {
-            canDash = false;
-        }
-
-        if (isGrounded)
-        {
-            hasDash = true;
-            canDash = false;
-        }
-    }
-
-    private void Dash()
-    {
-        //rb.AddForce(playerCam.transform.forward * dashForce, ForceMode.Impulse);
-        hasDash = false;
     }
 }

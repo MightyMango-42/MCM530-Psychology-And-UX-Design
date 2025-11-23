@@ -187,7 +187,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8496765852576851782}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: d401558559c029e4598b9762b5b4d74d, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -221,7 +221,7 @@ MonoBehaviour:
   score: 0
   playTime: 0
   deathCount: 0
-  groundSpeed: 50
+  groundSpeed: 10
   groundDrag: 6
   airDrag: 0.2
   airSpeedMultiplier: 0.1
@@ -235,12 +235,12 @@ MonoBehaviour:
   wallrunLayer:
     serializedVersion: 2
     m_Bits: 64
-  wallRunForce: 3
+  wallRunForce: 20
   wallCheckDistance: 0.7
-  wallRunMaxSpeed: 15
-  wallJumpUpForce: 2
-  wallJumpSideForce: 2
-  slideForce: 5
+  wallRunMaxSpeed: 20
+  wallJumpUpForce: 1
+  wallJumpSideForce: 1.5
+  slideForce: 2
   slideTime: 0
   slideHeight: 0.5
   dashForce: 5
