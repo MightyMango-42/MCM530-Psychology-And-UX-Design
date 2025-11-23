@@ -58,9 +58,10 @@ public class PlayerHUDManager : MonoBehaviour
         popupPanel.SetActive(false);
     }
 
-    public void OpenLevelCompletionPanel()
+    public void OpenLevelCompletionPanel(int score, string collectables)
     {
-        currentRunTimeText.text = playerTimerText.text;
+        currentRunTimeText.text = $"Best Run Time: {playerTimerText.text}\nCurrent Run Time: {playerTimerText.text}";
+        currentRunScoreText.text = $"Score: {score}\nCollectables Found: {collectables}";
 
         GameManager.Instance.UnlockCursor();
         levelCompletionPanel.SetActive(true);
@@ -68,7 +69,7 @@ public class PlayerHUDManager : MonoBehaviour
 
     public void OnContinueClicked()
     {
-        GameManager.Instance.LoadScene("MainTest");
+        GameManager.Instance.LoadScene("Main Test");
     }
 
     public void OnQuitClicked()

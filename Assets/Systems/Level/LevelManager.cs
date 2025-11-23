@@ -10,11 +10,16 @@ public class LevelManager : MonoBehaviour
 
     [Header("Level Contents")]
     [SerializeField] private List<CollectableOrb> collectables;
+    public int foundCollectables = 0;
+    public int CollectableCount { get; private set; }
 
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         player.transform.position = spawnPoint;
+        player.UnFreeze();
+
+        CollectableCount = collectables.Count;
     }
 
     public void RespawnPlayer()
@@ -25,9 +30,12 @@ public class LevelManager : MonoBehaviour
 
     public void EndLevel()
     {
-        GameManager.Instance.LoadScene("Main Test"); // Temp
-        //TotalScore = CalculateLevelScore();
-        //GameManager.Instance.PauseGame();
+        TotalScore = CalculateLevelScore();
+        string collectableStats = $"{foundCollectables}/{CollectableCount}";
+
+        player.playerHUDManager.OpenLevelCompletionPanel(TotalScore, collectableStats);
+
+        player.Freeze();
     }
 
     private int CalculateLevelScore()

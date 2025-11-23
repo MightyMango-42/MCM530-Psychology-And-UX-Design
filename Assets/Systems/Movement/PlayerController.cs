@@ -102,11 +102,14 @@ public class PlayerController : MonoBehaviour
     public void Freeze()
     {
         allowMovement = false;
+        cameraController.allowMovement = false;
         rb.useGravity = false;
+        rb.linearVelocity = Vector3.zero;
     }
     public void UnFreeze()
     {
         allowMovement = true;
+        cameraController.allowMovement = true;
         rb.useGravity = true;
     }
 
@@ -215,7 +218,7 @@ public class PlayerController : MonoBehaviour
 
             if (inputHandler.JumpTriggered) WallJump();
         }
-        else if (!CheckCanWallRun()) ExitWallRun();
+        else if (!CheckCanWallRun() && allowMovement) ExitWallRun();
     }
 
     private void WallJump()

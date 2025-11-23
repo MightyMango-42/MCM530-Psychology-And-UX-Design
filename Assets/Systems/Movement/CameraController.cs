@@ -29,6 +29,8 @@ public class CameraController : MonoBehaviour
     private float playerSpeed;
     private float playerMinSpeed;
 
+    public bool allowMovement = true;
+
     void Start()
     {
         inputHandler = PlayerInputHandler.Instance;
@@ -39,6 +41,7 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
+        if (!allowMovement) return;
         HandleRotation();
         UpdateCameraPosition();
         UpdateFOV();
