@@ -71,9 +71,7 @@ public class PlayerController : MonoBehaviour
     {
         inputHandler = PlayerInputHandler.Instance;
 
-        inputHandler.jumpAction.performed += Jump;
-        inputHandler.slideAction.performed += Slide;
-        inputHandler.slideAction.canceled += ExitSlide;
+        RegisterCallbacks();
 
         rb.freezeRotation = true;
         playerHeight = transform.localScale.y;
@@ -246,6 +244,12 @@ public class PlayerController : MonoBehaviour
 
     private void ExitSlide(InputAction.CallbackContext context)
     {
+        //if (// do a spherecast and check if it hits the ceiling)
+        //{
+        //    
+        //    return;
+        //}
+
         isSliding = false;
         transform.localScale = new Vector3(transform.localScale.x, playerHeight, transform.localScale.z);
         allowMovement = true;
@@ -267,5 +271,18 @@ public class PlayerController : MonoBehaviour
     {
         playerHUDManager.SetTime(playTime);
         playerHUDManager.SetPlayerSpeed(currentSpeed);
+    }
+
+    private void RegisterCallbacks()
+    {
+        inputHandler.jumpAction.performed += Jump;
+        inputHandler.slideAction.performed += Slide;
+        inputHandler.slideAction.canceled += ExitSlide;
+    }
+    public void UnregisterCallbacks() 
+    {
+        inputHandler.jumpAction.performed -= Jump;
+        inputHandler.slideAction.performed -= Slide;
+        inputHandler.slideAction.canceled -= ExitSlide;
     }
 }

@@ -10,6 +10,7 @@ public class EndZone : MonoBehaviour
     [SerializeField] private Vector3 size;
     [SerializeField] private GameObject rotatingObject;
     [SerializeField] private float rotationDelay;
+    [SerializeField] private string sceneToLoad;
 
     private void Awake()
     {
@@ -20,6 +21,7 @@ public class EndZone : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
+            GameManager.Instance.nextSceneToLoad = sceneToLoad;
             levelManager.EndLevel();
         }
     }

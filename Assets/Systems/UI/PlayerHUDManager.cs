@@ -60,7 +60,9 @@ public class PlayerHUDManager : MonoBehaviour
 
     public void OpenLevelCompletionPanel(int score, string collectables)
     {
-        currentRunTimeText.text = $"Best Run Time: {playerTimerText.text}\nCurrent Run Time: {playerTimerText.text}";
+        GameManager.Instance.canOpenPauseMenu = false;
+
+        currentRunTimeText.text = $"Run Time: {playerTimerText.text}";
         currentRunScoreText.text = $"Score: {score}\nCollectables Found: {collectables}";
 
         GameManager.Instance.UnlockCursor();
@@ -69,7 +71,8 @@ public class PlayerHUDManager : MonoBehaviour
 
     public void OnContinueClicked()
     {
-        GameManager.Instance.LoadScene("Main Test");
+        GameManager.Instance.LoadNextScene();
+        GameManager.Instance.canOpenPauseMenu = true;
     }
 
     public void OnQuitClicked()

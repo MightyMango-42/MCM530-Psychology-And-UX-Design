@@ -20,6 +20,8 @@ public class PauseMenuManager : MonoBehaviour
 
     private void Update()
     {
+        if (!GameManager.Instance.canOpenPauseMenu) return;
+
         if (Input.GetKeyDown(KeyCode.Escape) && menu.activeSelf) OnClose();
         else if (Input.GetKeyDown(KeyCode.Escape) && !menu.activeSelf) OnOpen();
     }

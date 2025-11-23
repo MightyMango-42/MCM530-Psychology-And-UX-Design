@@ -4,7 +4,9 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+    public string nextSceneToLoad;
     public bool GamePaused {get; private set;}
+    public bool canOpenPauseMenu = true;
 
     private void Awake()
     {
@@ -40,6 +42,10 @@ public class GameManager : MonoBehaviour
         ResumeGame();
 
         SceneManager.LoadScene(sceneToLoad);
+    }
+    public void LoadNextScene()
+    {
+        LoadScene(nextSceneToLoad);
     }
 
     public void LockCursor()
