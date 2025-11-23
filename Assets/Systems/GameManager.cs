@@ -8,6 +8,10 @@ public class GameManager : MonoBehaviour
     public bool GamePaused {get; private set;}
     public bool canOpenPauseMenu = true;
 
+    [Header("Level Scoring Parameters")]
+    public int maxLevelScore = 1000;
+    public int bracketBoundarySeparationInSeconds = 30;
+
     private void Awake()
     {
         if (Instance == null)

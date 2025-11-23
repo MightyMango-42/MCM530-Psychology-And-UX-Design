@@ -27,6 +27,11 @@ public class MainMenuManager : MonoBehaviour
         mainMenuPanel.SetActive(true);
     }
 
+    public void LoadLevel(string level)
+    {
+        GameManager.Instance.LoadScene(level);
+    }
+
     public void OnQuitClicked()
     {
         Application.Quit();

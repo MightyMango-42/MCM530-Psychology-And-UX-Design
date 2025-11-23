@@ -66,6 +66,8 @@ public class LevelManager : MonoBehaviour
 
         // Do calculation
 
+        calculatedScore += GameManager.Instance.maxLevelScore;
+
         return calculatedScore;
     }
 }

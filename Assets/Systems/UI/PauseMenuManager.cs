@@ -18,6 +18,11 @@ public class PauseMenuManager : MonoBehaviour
         GameManager.Instance.LockCursor();
     }
 
+    public void OnExitToMainMenu()
+    {
+        GameManager.Instance.LoadScene("Main Menu");
+    }
+
     private void Update()
     {
         if (!GameManager.Instance.canOpenPauseMenu) return;
