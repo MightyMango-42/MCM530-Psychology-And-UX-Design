@@ -22,12 +22,16 @@ public class CameraController : MonoBehaviour
 
     private float verticalRotation;
     private float horizontalRotation;
+    private float zRotation;
 
     [Header("FOV Settings")]
     [SerializeField] private float baseFOV;
     [SerializeField] private float maxFOV;
     private float playerSpeed;
     private float playerMinSpeed;
+
+    [Header("Tilt Parameters")]
+    [SerializeField] public float wallRunTiltAmount;
 
     public bool allowMovement = true;
 
@@ -64,6 +68,11 @@ public class CameraController : MonoBehaviour
         playerCam.fieldOfView = fov;
     }
 
+    public void Tilt(float angle)
+    {
+        zRotation = angle;
+    }
+
     private void HandleRotation()
     {
         horizontalRotation += inputHandler.LookInputVector.x * sensMultiplier * xSensitivity * Time.deltaTime;
@@ -74,7 +83,7 @@ public class CameraController : MonoBehaviour
 
         // Rotate Camera on X and Y axis
         verticalRotation = Mathf.Clamp(verticalRotation, minRotation, maxRotation);
-        playerCam.transform.localRotation = Quaternion.Euler(verticalRotation, horizontalRotation, 0);
+        playerCam.transform.localRotation = Quaternion.Euler(verticalRotation, horizontalRotation, zRotation);
     }
 
     private void UpdateCameraPosition()
@@ -83,6 +92,7 @@ public class CameraController : MonoBehaviour
     }
 
     private void UpdateFOV()
+
     {
         if (playerSpeed < playerMinSpeed)
         {

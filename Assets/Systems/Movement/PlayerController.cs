@@ -200,13 +200,14 @@ public class PlayerController : MonoBehaviour
     {
         isWallRunning = false;
         rb.useGravity = true;
+        cameraController.Tilt(0);
     }
     private void HandleWallRunning()
     {
         if (CheckCanWallRun())
         {
             EnterWallRun();
-
+            
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
 
             Vector3 wallNormal = canRunRight ? -rightWallHit.normal : leftWallHit.normal;
@@ -215,6 +216,9 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(wallForward * wallRunForce * Time.fixedDeltaTime * generalForceMultiplier, ForceMode.Force);
 
             if (inputHandler.JumpTriggered) WallJump();
+
+            if (canRunRight) cameraController.Tilt(cameraController.wallRunTiltAmount);
+            else if (canRunLeft) cameraController.Tilt(-cameraController.wallRunTiltAmount);
         }
         else if (!CheckCanWallRun() && allowMovement) ExitWallRun();
     }

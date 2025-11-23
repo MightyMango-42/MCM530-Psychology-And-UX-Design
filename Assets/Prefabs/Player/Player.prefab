@@ -221,7 +221,7 @@ MonoBehaviour:
   score: 0
   playTime: 0
   deathCount: 0
-  groundSpeed: 10
+  groundSpeed: 13
   groundDrag: 6
   airDrag: 0.2
   airSpeedMultiplier: 0.1
@@ -243,4 +243,3 @@ MonoBehaviour:
   slideForce: 2
   slideTime: 0
   slideHeight: 0.5
-  dashForce: 5
