@@ -11983,7 +11983,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1691663077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12004,7 +12004,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Stick Near The Side of Scratched Walls to Wall Run
+  m_text: 'Hold Left or Right into a Grated Wall to Wall Run
 
 
     While Wall Running,

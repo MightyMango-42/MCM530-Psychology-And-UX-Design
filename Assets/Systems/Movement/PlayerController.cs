@@ -25,6 +25,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float airDrag;
     [SerializeField] private float airSpeedMultiplier;
     [SerializeField] private float generalForceMultiplier;
+    [SerializeField] private float coyoteTimeGiven = 1f;
+    private float coyoteTime;
 
     private float travelSpeed;
     private float currentSpeed;
@@ -85,6 +87,8 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         playTime += Time.deltaTime;
+        coyoteTime -= Time.deltaTime;
+
         if (!allowMovement) return;
 
         CalculateSpeed();
@@ -92,8 +96,10 @@ public class PlayerController : MonoBehaviour
         HandlePlayerInput();
         AddPlayerDrag();
         LimitSpeed(travelSpeed);
+
         canExitSlide = CheckCanExitSlide();
         if (isSliding && attemptingToExitSlide) ExitSlide(new InputAction.CallbackContext());
+
         UpdateHUD();
     }
 
@@ -121,6 +127,11 @@ public class PlayerController : MonoBehaviour
     public void Kill()
     {
         deathCount++;
+    }
+
+    private void ResetCoyoteTime()
+    {
+        coyoteTime = coyoteTimeGiven;
     }
 
     private void HandlePlayerInput()
@@ -173,6 +184,7 @@ public class PlayerController : MonoBehaviour
 
         if (Physics.SphereCast(transform.position, groundCollisionSphereSize, -transform.up, out RaycastHit hit, maxCollisionDistance, jumpLayer))
         {
+            ResetCoyoteTime();
             return true;
         }
         else return false;
@@ -180,7 +192,7 @@ public class PlayerController : MonoBehaviour
 
     private void Jump(InputAction.CallbackContext context)
     {
-        if (isGrounded)
+        if (coyoteTime > 0)
         {
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
             rb.AddForce(transform.up * jumpForce * Time.fixedDeltaTime * (generalForceMultiplier / 4), ForceMode.Impulse);
@@ -211,8 +223,10 @@ public class PlayerController : MonoBehaviour
     }
     private void HandleWallRunning()
     {
+        if (inputHandler.JumpTriggered && isWallRunning && coyoteTime > 0) WallJump();
         if (CheckCanWallRun())
         {
+            ResetCoyoteTime();
             EnterWallRun();
             
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
@@ -221,8 +235,6 @@ public class PlayerController : MonoBehaviour
             Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
 
             rb.AddForce(wallForward * wallRunForce * Time.fixedDeltaTime * generalForceMultiplier, ForceMode.Force);
-
-            if (inputHandler.JumpTriggered) WallJump();
 
             if (canRunRight) cameraController.Tilt(cameraController.wallRunTiltAmount);
             else if (canRunLeft) cameraController.Tilt(-cameraController.wallRunTiltAmount);
@@ -243,6 +255,7 @@ public class PlayerController : MonoBehaviour
 
     private void Slide(InputAction.CallbackContext context)
     {
+        ResetCoyoteTime();
         if (new Vector3(moveDirection.x, 0, moveDirection.z) == Vector3.zero) return;
         if (isWallRunning) return;
 

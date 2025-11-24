@@ -226,6 +226,7 @@ MonoBehaviour:
   airDrag: 0.2
   airSpeedMultiplier: 0.1
   generalForceMultiplier: 200
+  coyoteTimeGiven: 0.15
   jumpLayer:
     serializedVersion: 2
     m_Bits: 8
