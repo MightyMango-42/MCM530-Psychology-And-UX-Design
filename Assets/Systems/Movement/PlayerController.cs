@@ -155,11 +155,11 @@ public class PlayerController : MonoBehaviour
             travelSpeed = groundSpeed;
             rb.AddForce(moveDirection * travelSpeed * Time.fixedDeltaTime * generalForceMultiplier, ForceMode.Force);
         }
-        //else if (!isGrounded)
-        //{
-        //    travelSpeed = groundSpeed / 2;
-        //    rb.AddForce(moveDirection * travelSpeed * airSpeedMultiplier * Time.fixedDeltaTime * generalForceMultiplier, ForceMode.Force);
-        //}
+        else if (!isGrounded)
+        {
+            travelSpeed = groundSpeed;
+            rb.AddForce(moveDirection * travelSpeed * airSpeedMultiplier * Time.fixedDeltaTime * generalForceMultiplier, ForceMode.Force);
+        }
     }
 
     private void LimitSpeed(float maxSpeed)
@@ -260,7 +260,7 @@ public class PlayerController : MonoBehaviour
         if (isWallRunning) return;
 
         isSliding = true;
-        slidingSpeed = currentSpeed;
+        currentSpeed = slidingSpeed;
 
         transform.localScale = new Vector3 (transform.localScale.x, slideHeight, transform.localScale.z);
         rb.AddForce(moveDirection * slideForce * Time.deltaTime, ForceMode.Force);
