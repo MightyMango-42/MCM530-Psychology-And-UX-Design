@@ -35,8 +35,8 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded = true;
 
     [Header("Jump Parameters")]
-    [SerializeField] private LayerMask layerMask;
-    [SerializeField] private float collisionSphereSize;
+    [SerializeField] private LayerMask jumpLayer;
+    [SerializeField] private float groundCollisionSphereSize;
     [SerializeField] private float maxCollisionDistance;
     [SerializeField] private float jumpForce;
 
@@ -56,11 +56,16 @@ public class PlayerController : MonoBehaviour
     private bool isWallRunning;
 
     [Header("Slide Parameters")]
+    [SerializeField] private LayerMask crouchCheckLayer;
+    [SerializeField] private float crouchCollisionSphereSize;
+    [SerializeField] private float uncrouchCheckDistance;
     [SerializeField] private float slideForce;
     [SerializeField] private float slideTime;
     [SerializeField] private float slideHeight;
     private bool isSliding;
     private float slidingSpeed;
+    public bool canExitSlide;
+    public bool attemptingToExitSlide;
 
     void Awake()
     {
@@ -87,6 +92,8 @@ public class PlayerController : MonoBehaviour
         HandlePlayerInput();
         AddPlayerDrag();
         LimitSpeed(travelSpeed);
+        canExitSlide = CheckCanExitSlide();
+        if (isSliding && attemptingToExitSlide) ExitSlide(new InputAction.CallbackContext());
         UpdateHUD();
     }
 
@@ -164,7 +171,7 @@ public class PlayerController : MonoBehaviour
     {
         // Cast a sphere to the ground, if it hits the specified ground layer stored within the layermask, it will return true
 
-        if (Physics.SphereCast(transform.position, collisionSphereSize, -transform.up, out RaycastHit hit, maxCollisionDistance, layerMask))
+        if (Physics.SphereCast(transform.position, groundCollisionSphereSize, -transform.up, out RaycastHit hit, maxCollisionDistance, jumpLayer))
         {
             return true;
         }
@@ -236,7 +243,7 @@ public class PlayerController : MonoBehaviour
 
     private void Slide(InputAction.CallbackContext context)
     {
-        if (!(moveDirection.x > 0 || moveDirection.z > 0)) return;
+        if (new Vector3(moveDirection.x, 0, moveDirection.z) == Vector3.zero) return;
         if (isWallRunning) return;
 
         isSliding = true;
@@ -246,14 +253,25 @@ public class PlayerController : MonoBehaviour
         rb.AddForce(moveDirection * slideForce * Time.deltaTime, ForceMode.Force);
     }
 
+    private bool CheckCanExitSlide()
+    {
+        if (Physics.SphereCast(transform.position, crouchCollisionSphereSize, transform.up, out RaycastHit hit, uncrouchCheckDistance, crouchCheckLayer)) return false;
+        else
+        {
+            return true;
+        }
+            
+    }
+
     private void ExitSlide(InputAction.CallbackContext context)
     {
-        //if (// do a spherecast and check if it hits the ceiling)
-        //{
-        //    
-        //    return;
-        //}
+        if (!canExitSlide) 
+        {
+            attemptingToExitSlide = true;
+            return;
+        }
 
+        attemptingToExitSlide = false;
         isSliding = false;
         transform.localScale = new Vector3(transform.localScale.x, playerHeight, transform.localScale.z);
         allowMovement = true;

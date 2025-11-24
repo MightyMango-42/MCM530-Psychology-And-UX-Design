@@ -226,10 +226,10 @@ MonoBehaviour:
   airDrag: 0.2
   airSpeedMultiplier: 0.1
   generalForceMultiplier: 200
-  layerMask:
+  jumpLayer:
     serializedVersion: 2
     m_Bits: 8
-  collisionSphereSize: 0.5
+  groundCollisionSphereSize: 0.5
   maxCollisionDistance: 0.5
   jumpForce: 9
   wallrunLayer:
@@ -240,6 +240,13 @@ MonoBehaviour:
   wallRunMaxSpeed: 20
   wallJumpUpForce: 1
   wallJumpSideForce: 1.5
+  crouchCheckLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  crouchCollisionSphereSize: 0.5
+  uncrouchCheckDistance: 0.5
   slideForce: 2
   slideTime: 0
   slideHeight: 0.5
+  canExitSlide: 0
+  attemptingToExitSlide: 0
