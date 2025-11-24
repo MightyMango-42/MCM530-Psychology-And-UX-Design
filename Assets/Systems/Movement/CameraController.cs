@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -32,6 +31,8 @@ public class CameraController : MonoBehaviour
 
     [Header("Tilt Parameters")]
     [SerializeField] public float wallRunTiltAmount;
+    [SerializeField] private float rotationSpeed;
+    private float zAngle;
 
     public bool allowMovement = true;
 
@@ -83,7 +84,10 @@ public class CameraController : MonoBehaviour
 
         // Rotate Camera on X and Y axis
         verticalRotation = Mathf.Clamp(verticalRotation, minRotation, maxRotation);
-        playerCam.transform.localRotation = Quaternion.Euler(verticalRotation, horizontalRotation, zRotation);
+
+        zAngle = Mathf.Lerp(playerCam.transform.eulerAngles.z, zRotation, Time.deltaTime * rotationSpeed);
+
+        playerCam.transform.localRotation = Quaternion.Euler(verticalRotation, horizontalRotation, zAngle);
     }
 
     private void UpdateCameraPosition()

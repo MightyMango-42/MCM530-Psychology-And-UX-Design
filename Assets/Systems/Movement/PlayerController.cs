@@ -66,8 +66,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float slideHeight;
     private bool isSliding;
     private float slidingSpeed;
-    public bool canExitSlide;
-    public bool attemptingToExitSlide;
+    private bool canExitSlide;
+    private bool attemptingToExitSlide;
 
     void Awake()
     {
@@ -211,6 +211,7 @@ public class PlayerController : MonoBehaviour
 
     private void EnterWallRun()
     {
+        ResetCoyoteTime();
         isWallRunning = true;
         rb.useGravity = false;
     }
@@ -226,7 +227,6 @@ public class PlayerController : MonoBehaviour
         if (inputHandler.JumpTriggered && isWallRunning && coyoteTime > 0) WallJump();
         if (CheckCanWallRun())
         {
-            ResetCoyoteTime();
             EnterWallRun();
             
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
