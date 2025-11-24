@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Camera))]
 public class CameraController : MonoBehaviour
@@ -34,6 +33,11 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float rotationSpeed;
     private float zAngle;
 
+    [Header("VFX")]
+    [SerializeField] GameObject speedLinesObject;
+    [SerializeField] private float speedLineDeactivationTime;
+    private float speedLineTimer;
+
     public bool allowMovement = true;
 
     void Start()
@@ -49,7 +53,7 @@ public class CameraController : MonoBehaviour
         if (!allowMovement) return;
         HandleRotation();
         UpdateCameraPosition();
-        UpdateFOV();
+        UpdateEffects();
     }
 
     public void HideCursor()
@@ -69,9 +73,10 @@ public class CameraController : MonoBehaviour
         playerCam.fieldOfView = fov;
     }
 
-    public void Tilt(float angle)
+    public void Tilt(float angle, bool toRight)
     {
-        zRotation = angle;
+        if (toRight) zRotation = angle;
+        else zRotation = -angle;
     }
 
     private void HandleRotation()
@@ -85,7 +90,9 @@ public class CameraController : MonoBehaviour
         // Rotate Camera on X and Y axis
         verticalRotation = Mathf.Clamp(verticalRotation, minRotation, maxRotation);
 
-        zAngle = Mathf.Lerp(playerCam.transform.eulerAngles.z, zRotation, Time.deltaTime * rotationSpeed);
+        //if (playerCam.transform.eulerAngles.z > 359) playerCam.transform.eulerAngles = new Vector3(playerCam.transform.eulerAngles.x, playerCam.transform.eulerAngles.y, 0);
+
+        zAngle = Mathf.Lerp(zAngle, zRotation, Time.deltaTime * rotationSpeed);
 
         playerCam.transform.localRotation = Quaternion.Euler(verticalRotation, horizontalRotation, zAngle);
     }
@@ -95,12 +102,18 @@ public class CameraController : MonoBehaviour
         transform.position = new Vector3(playerOrientation.position.x, playerOrientation.position.y + yOffset, playerOrientation.position.z);
     }
 
-    private void UpdateFOV()
-
+    private void UpdateEffects()
     {
+        speedLineTimer -= Time.deltaTime;
+
         if (playerSpeed < playerMinSpeed)
         {
             playerCam.fieldOfView = baseFOV;
+
+            if (speedLineTimer <= 0)
+            {
+                DeactivateSpeedLines();
+            }
             return;
         }
 
@@ -108,11 +121,23 @@ public class CameraController : MonoBehaviour
         if (baseFOV + fovToAdd > maxFOV) return;
 
         playerCam.fieldOfView = baseFOV + fovToAdd;
+        ActivateSpeedLines();
     }
 
     public void SetSpeedEffect(float speed, float minSpeed)
     {
         playerSpeed = speed;
         playerMinSpeed = minSpeed;
+    }
+
+    public void ActivateSpeedLines()
+    {
+        speedLineTimer = speedLineDeactivationTime;
+        speedLinesObject.SetActive(true);
+    }
+
+    public void DeactivateSpeedLines()
+    { 
+        speedLinesObject.SetActive(false);
     }
 }

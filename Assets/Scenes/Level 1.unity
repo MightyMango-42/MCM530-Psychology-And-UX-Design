@@ -20246,17 +20246,9 @@ PrefabInstance:
     m_TransformParent: {fileID: 585350306243860664}
     m_Modifications:
     - target: {fileID: 2320328878068320824, guid: a7c0bb5206311df449cd347524af12b9, type: 3}
-      propertyPath: rotationSpeed
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2320328878068320824, guid: a7c0bb5206311df449cd347524af12b9, type: 3}
       propertyPath: playerOrientation
       value: 
       objectReference: {fileID: 519144342}
-    - target: {fileID: 2320328878068320824, guid: a7c0bb5206311df449cd347524af12b9, type: 3}
-      propertyPath: wallRunTiltAmount
-      value: 15
-      objectReference: {fileID: 0}
     - target: {fileID: 3399520968754512451, guid: a7c0bb5206311df449cd347524af12b9, type: 3}
       propertyPath: m_Name
       value: Player Camera
