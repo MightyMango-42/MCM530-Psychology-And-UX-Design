@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
     public void PauseGame()
     {
         GamePaused = true;
-        Time.timeScale = 0;
+        Time.timeScale = 0f;
     }
     public void ResumeGame()
     {
