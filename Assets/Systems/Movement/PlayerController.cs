@@ -86,7 +86,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        //if (GameManager.Instance.GamePaused) return;
+        if (GameManager.Instance.GamePaused) return;
 
         playTime += Time.deltaTime;
         coyoteTime -= Time.deltaTime;

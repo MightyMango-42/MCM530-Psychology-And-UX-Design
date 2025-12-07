@@ -29,11 +29,13 @@ public class GameManager : MonoBehaviour
     {
         GamePaused = true;
         Time.timeScale = 0f;
+        UnlockCursor();
     }
     public void ResumeGame()
     {
         GamePaused = false;
         Time.timeScale = 1f;
+        LockCursor();
     }
     public void QuitGame()
     {

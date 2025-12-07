@@ -17,16 +17,21 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] private string look;
     [SerializeField] private string jump;
     [SerializeField] private string slide;
+    [SerializeField] private string pause;
 
+    public PlayerInput playerInputComponent;
+    
     public InputAction moveAction;
     public InputAction lookAction;
     public InputAction jumpAction;
     public InputAction slideAction;
+    public InputAction pauseAction;
 
     public Vector2 MoveInputVector { get; private set; }
     public Vector2 LookInputVector { get; private set; }
     public bool JumpTriggered { get; private set; }
     public bool SlideTriggered { get; private set; }
+    public bool PauseTriggered { get; private set; }
 
     private void Awake()
     {
@@ -46,6 +51,9 @@ public class PlayerInputHandler : MonoBehaviour
         lookAction = defaultActionMap.FindAction(look);
         jumpAction = defaultActionMap.FindAction(jump);
         slideAction = defaultActionMap.FindAction(slide);
+        pauseAction = defaultActionMap.FindAction(pause);
+
+        playerInputComponent = GetComponent<PlayerInput>();
     }
     private void OnEnable()
     {
@@ -53,6 +61,7 @@ public class PlayerInputHandler : MonoBehaviour
         lookAction.Enable();
         jumpAction.Enable();
         slideAction.Enable();
+        pauseAction.Enable();
 
         AddContexts();
     }
@@ -62,6 +71,7 @@ public class PlayerInputHandler : MonoBehaviour
         lookAction.Disable();
         jumpAction.Disable();
         slideAction.Disable();
+        pauseAction.Disable();
     }
 
     private void AddContexts()
@@ -77,5 +87,8 @@ public class PlayerInputHandler : MonoBehaviour
 
         slideAction.performed += context => SlideTriggered = true;
         slideAction.canceled += context => SlideTriggered = false;
+
+        pauseAction.performed += context => PauseTriggered = true;
+        pauseAction.canceled += context => PauseTriggered = false;
     }
 }

@@ -11,8 +11,10 @@ public class CameraController : MonoBehaviour
     private Camera playerCam;
 
     [Header("Camera Parameters")]
-    [SerializeField] private float xSensitivity;
-    [SerializeField] private float ySensitivity;
+    [SerializeField] private float mouseSensX;
+    [SerializeField] private float mouseSensY;
+    [SerializeField] private float gamepadSensX;
+    [SerializeField] private float gamepadSensY;
     [SerializeField] private float sensMultiplier;
     [SerializeField] private float maxRotation;
     [SerializeField] private float minRotation;
@@ -81,8 +83,23 @@ public class CameraController : MonoBehaviour
 
     private void HandleRotation()
     {
-        horizontalRotation += inputHandler.LookInputVector.x * sensMultiplier * xSensitivity * Time.deltaTime;
-        verticalRotation -= inputHandler.LookInputVector.y * sensMultiplier * ySensitivity * Time.deltaTime;
+        float sensX;
+        float sensY;
+
+        if (inputHandler.playerInputComponent.currentControlScheme == "Gamepad")
+        {
+            sensX = gamepadSensX;
+            sensY = gamepadSensY;
+        }
+        else
+        {
+            sensX = mouseSensX;
+            sensY = mouseSensY;
+        }
+            
+
+        horizontalRotation += inputHandler.LookInputVector.x * sensMultiplier * sensX * Time.deltaTime;
+        verticalRotation -= inputHandler.LookInputVector.y * sensMultiplier * sensY * Time.deltaTime;
 
         // Rotate Player on Y axis
         playerOrientation.rotation = Quaternion.Euler(0, horizontalRotation, 0);
@@ -90,8 +107,7 @@ public class CameraController : MonoBehaviour
         // Rotate Camera on X and Y axis
         verticalRotation = Mathf.Clamp(verticalRotation, minRotation, maxRotation);
 
-        //if (playerCam.transform.eulerAngles.z > 359) playerCam.transform.eulerAngles = new Vector3(playerCam.transform.eulerAngles.x, playerCam.transform.eulerAngles.y, 0);
-
+        // Lerp Z angle for smoother transition
         zAngle = Mathf.Lerp(zAngle, zRotation, Time.deltaTime * rotationSpeed);
 
         playerCam.transform.localRotation = Quaternion.Euler(verticalRotation, horizontalRotation, zAngle);

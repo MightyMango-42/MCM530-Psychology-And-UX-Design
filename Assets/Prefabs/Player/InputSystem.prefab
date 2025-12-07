@@ -50,6 +50,7 @@ MonoBehaviour:
   look: Look
   jump: Jump
   slide: Slide
+  pause: Pause
   moveAction:
     m_Name: Move
     m_Type: 0
@@ -82,6 +83,15 @@ MonoBehaviour:
     m_Type: 0
     m_ExpectedControlType: 
     m_Id: 0e2bd901-f763-43db-a88d-f729c6cf6491
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  pauseAction:
+    m_Name: Pause
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: fe4beed9-5760-43ac-a887-67d7089a51b0
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings: []
