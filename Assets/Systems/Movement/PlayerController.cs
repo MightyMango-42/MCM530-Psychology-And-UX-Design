@@ -130,6 +130,10 @@ public class PlayerController : MonoBehaviour
     {
         deathCount++;
     }
+    public void KillMomentum()
+    {
+        rb.linearVelocity = Vector3.zero;
+    }
 
     private void ResetCoyoteTime()
     {

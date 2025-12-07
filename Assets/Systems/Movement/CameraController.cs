@@ -52,7 +52,9 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.Instance.GamePaused) return;
         if (!allowMovement) return;
+
         HandleRotation();
         UpdateCameraPosition();
         UpdateEffects();

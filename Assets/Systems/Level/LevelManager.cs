@@ -49,6 +49,7 @@ public class LevelManager : MonoBehaviour
 
         player.UnregisterCallbacks();
         player.Freeze();
+        player.KillMomentum();
     }
 
     public void SetNewCheckpoint(Vector3 newSpawnPosition, int newCheckPoint)

@@ -266,8 +266,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerOrientation: {fileID: 0}
-  xSensitivity: 3
-  ySensitivity: 3
+  mouseSensX: 3
+  mouseSensY: 3
+  gamepadSensX: 18
+  gamepadSensY: 18
   sensMultiplier: 10
   maxRotation: 80
   minRotation: -80

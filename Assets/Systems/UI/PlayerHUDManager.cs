@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerHUDManager : MonoBehaviour
 {
@@ -22,6 +23,8 @@ public class PlayerHUDManager : MonoBehaviour
     [SerializeField] GameObject currentRunScoreObject;
     private TextMeshProUGUI currentRunTimeText;
     private TextMeshProUGUI currentRunScoreText;
+
+    [SerializeField] private GameObject selectedButtonObject;
 
     private float currentTime;
     private float playerSpeed;
@@ -67,6 +70,8 @@ public class PlayerHUDManager : MonoBehaviour
 
         GameManager.Instance.UnlockCursor();
         levelCompletionPanel.SetActive(true);
+
+        EventSystem.current.SetSelectedGameObject(selectedButtonObject);
     }
 
     public void OnContinueClicked()

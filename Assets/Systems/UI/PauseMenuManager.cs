@@ -1,9 +1,13 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PauseMenuManager : MonoBehaviour
 {
     PlayerInputHandler inputHandler;
     [SerializeField] GameObject menu;
+
+    [Header("First Selected Objects")]
+    [SerializeField] private GameObject selectedButtonObject;
 
     private void Start()
     {
@@ -14,6 +18,8 @@ public class PauseMenuManager : MonoBehaviour
     {
         menu.SetActive(true);
         GameManager.Instance.PauseGame();
+
+        EventSystem.current.SetSelectedGameObject(selectedButtonObject);
     }
 
     public void OnClose()
