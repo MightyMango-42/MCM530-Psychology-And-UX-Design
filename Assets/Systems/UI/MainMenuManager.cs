@@ -5,9 +5,11 @@ public class MainMenuManager : MonoBehaviour
 {
     [SerializeField] GameObject mainMenuPanel;
     [SerializeField] GameObject levelSelectPanel;
+    [SerializeField] GameObject creditsPanel;
     [Space]
     [SerializeField] GameObject selectedMenuButtonObject;
     [SerializeField] GameObject selectedLevelButtonObject;
+    [SerializeField] GameObject selectedCreditsButtonObject;
 
     private void Start()
     {
@@ -31,6 +33,22 @@ public class MainMenuManager : MonoBehaviour
     public void OnReturnButtonClicked()
     {
         levelSelectPanel.SetActive(false);
+        mainMenuPanel.SetActive(true);
+
+        EventSystem.current.SetSelectedGameObject(selectedMenuButtonObject);
+    }
+
+    public void OnCreditsClicked()
+    {
+        mainMenuPanel.SetActive(false);
+        creditsPanel.SetActive(true);
+
+        EventSystem.current.SetSelectedGameObject(selectedCreditsButtonObject);
+    }
+
+    public void OnCreditsReturnButtonClicked()
+    {
+        creditsPanel.SetActive(false);
         mainMenuPanel.SetActive(true);
 
         EventSystem.current.SetSelectedGameObject(selectedMenuButtonObject);
