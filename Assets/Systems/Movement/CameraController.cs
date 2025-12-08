@@ -98,7 +98,6 @@ public class CameraController : MonoBehaviour
             sensX = mouseSensX;
             sensY = mouseSensY;
         }
-            
 
         horizontalRotation += inputHandler.LookInputVector.x * sensMultiplier * sensX * Time.deltaTime;
         verticalRotation -= inputHandler.LookInputVector.y * sensMultiplier * sensY * Time.deltaTime;

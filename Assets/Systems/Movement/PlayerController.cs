@@ -233,6 +233,8 @@ public class PlayerController : MonoBehaviour
         if (inputHandler.JumpTriggered && isWallRunning && coyoteTime > 0) WallJump();
         if (CheckCanWallRun())
         {
+            if (isWallRunning && currentSpeed < 1) return;
+
             EnterWallRun();
             
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
@@ -278,8 +280,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             return true;
-        }
-            
+        }   
     }
 
     private void ExitSlide(InputAction.CallbackContext context)
