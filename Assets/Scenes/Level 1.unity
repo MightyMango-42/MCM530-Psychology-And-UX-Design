@@ -48376,6 +48376,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EndZone
       objectReference: {fileID: 0}
+    - target: {fileID: 5804794971745053416, guid: be8ffecf9cc39cd43bf3108776f94eed, type: 3}
+      propertyPath: sceneToLoad
+      value: Level 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

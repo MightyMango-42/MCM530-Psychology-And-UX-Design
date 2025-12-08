@@ -8642,6 +8642,7 @@ Transform:
   - {fileID: 349558771}
   - {fileID: 2019509060}
   - {fileID: 876187534}
+  - {fileID: 972583638}
   m_Father: {fileID: 604891115}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &237611362
@@ -20201,15 +20202,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7277172177755464596, guid: eca551106e240e243bd0bcf4a448ccb1, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7277172177755464596, guid: eca551106e240e243bd0bcf4a448ccb1, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7277172177755464596, guid: eca551106e240e243bd0bcf4a448ccb1, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7277172177755464596, guid: eca551106e240e243bd0bcf4a448ccb1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -26914,6 +26915,75 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &972583637
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 972583638}
+  - component: {fileID: 972583639}
+  m_Layer: 0
+  m_Name: Local Volumetric Fog (5)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &972583638
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 972583637}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 53, y: -12, z: 72}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 233470398}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &972583639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 972583637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1fbb15bf92b84f40a1eb030765b5afe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parameters:
+    albedo: {r: 0.16981131, g: 0.16981131, b: 0.16981131, a: 1}
+    meanFreePath: 1.84
+    blendingMode: 1
+    priority: 0
+    anisotropy: 0
+    volumeMask: {fileID: 0}
+    textureScrollingSpeed: {x: 0, y: 0, z: 0}
+    textureTiling: {x: 1, y: 1, z: 1}
+    positiveFade: {x: 0, y: 0, z: 0}
+    negativeFade: {x: 0, y: 0, z: 0}
+    m_EditorUniformFade: 0
+    m_EditorPositiveFade: {x: 0, y: 0.005, z: 0.012499999}
+    m_EditorNegativeFade: {x: 0, y: 0.005, z: 0.012499999}
+    m_EditorAdvancedFade: 0
+    scaleMode: 0
+    size: {x: 8, y: 20, z: 8}
+    invertFade: 0
+    distanceFadeStart: 10000
+    distanceFadeEnd: 10000
+    textureOffset: {x: 0, y: 0, z: 0}
+    falloffMode: 0
+    maskMode: 0
+    materialMask: {fileID: 0}
+  m_Version: 3
 --- !u!43 &973626925
 Mesh:
   m_ObjectHideFlags: 0
@@ -62149,10 +62219,6 @@ PrefabInstance:
     - target: {fileID: 1288299551320753191, guid: be8ffecf9cc39cd43bf3108776f94eed, type: 3}
       propertyPath: m_Name
       value: EndZone
-      objectReference: {fileID: 0}
-    - target: {fileID: 5804794971745053416, guid: be8ffecf9cc39cd43bf3108776f94eed, type: 3}
-      propertyPath: sceneToLoad
-      value: Main Menu
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
