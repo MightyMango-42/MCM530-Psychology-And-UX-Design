@@ -48,6 +48,11 @@ public class CameraController : MonoBehaviour
         playerCam = GetComponent<Camera>();
         playerCam.fieldOfView = baseFOV;
         HideCursor();
+
+        mouseSensX = PlayerPrefs.GetFloat("MouseXSens");
+        mouseSensY = PlayerPrefs.GetFloat("MouseYSens");
+        gamepadSensX = PlayerPrefs.GetFloat("GamepadXSens");
+        gamepadSensY = PlayerPrefs.GetFloat("GamepadYSens");
     }
 
     void Update()

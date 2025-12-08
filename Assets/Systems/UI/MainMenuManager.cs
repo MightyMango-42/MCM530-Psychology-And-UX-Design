@@ -3,6 +3,8 @@ using UnityEngine.EventSystems;
 
 public class MainMenuManager : MonoBehaviour
 {
+    [SerializeField] SettingsManager settingsManager;
+    [Space]
     [SerializeField] GameObject mainMenuPanel;
     [SerializeField] GameObject levelSelectPanel;
     [SerializeField] GameObject creditsPanel;
@@ -36,6 +38,7 @@ public class MainMenuManager : MonoBehaviour
     {
         mainMenuPanel.SetActive(false);
         settingsPanel.SetActive(true);
+        settingsManager.OnOpen();
 
         EventSystem.current.SetSelectedGameObject(selectedSettingsButtonObject);
     }
