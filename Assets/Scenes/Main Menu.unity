@@ -2653,7 +2653,15 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Level Materials - YughuesFreeMetalMaterials by Yughue
+  m_text: 'Level Materials - YughuesFreeMetalMaterials by Yughue
+
+
+    Main Menu
+    Theme - Retro gaming by YakaStreams https://pixabay.com/music/upbeat-retro-gaming-271301/
+
+
+    Game
+    Theme - edm gaming music by sapan4 https://pixabay.com/music/techno-trance-edm-gaming-music-335408/'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -11173,6 +11181,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2328728401278878991, guid: 8b39bfd121108484d862548d5a2957b2, type: 3}
+      propertyPath: gameMusic
+      value: 
+      objectReference: {fileID: 8300000, guid: ddba3cffc92729840ada32089a835287, type: 3}
+    - target: {fileID: 2328728401278878991, guid: 8b39bfd121108484d862548d5a2957b2, type: 3}
+      propertyPath: menuMusic
+      value: 
+      objectReference: {fileID: 8300000, guid: 2b64296234ba64c4a8dd5535695c3ffc, type: 3}
     - target: {fileID: 7038921344783530328, guid: 8b39bfd121108484d862548d5a2957b2, type: 3}
       propertyPath: m_Name
       value: AudioSystem

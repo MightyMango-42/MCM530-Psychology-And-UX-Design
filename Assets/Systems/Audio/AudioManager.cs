@@ -19,6 +19,11 @@ public class AudioManager : MonoBehaviour
     public AudioClip menuMusic;
     public AudioClip gameMusic;
 
+    [Header("SFX")]
+    public AudioClip buttonPress;
+    public AudioClip collectable;
+    public AudioClip jump;
+
     //[Header("SFX")]
 
     private void Awake()

@@ -19,6 +19,7 @@ public class MainMenuManager : MonoBehaviour
     {
         GameManager.Instance.UnlockCursor();
         EventSystem.current.SetSelectedGameObject(selectedMenuButtonObject);
+        AudioManager.Instance.PlayMusic(AudioManager.Instance.menuMusic);
     }
 
     public void OnNewGameClicked()
