@@ -55,9 +55,9 @@ public class LevelManager : MonoBehaviour
 
         player.playerHUDManager.OpenLevelCompletionPanel(TotalScore, collectableStats);
 
-        player.UnregisterCallbacks();
         player.Freeze();
         player.KillMomentum();
+        player.UnregisterCallbacks();
     }
 
     public void SetNewCheckpoint(Vector3 newSpawnPosition, int newCheckPoint)

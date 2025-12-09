@@ -352,8 +352,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1013480979}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.36, y: 0}
-  m_AnchorMax: {x: 0.36, y: 1}
+  m_AnchorMin: {x: 0.3469388, y: 0}
+  m_AnchorMax: {x: 0.3469388, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1167,7 +1167,7 @@ RectTransform:
   m_Father: {fileID: 1713744718}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.625, y: 1}
+  m_AnchorMax: {x: 0.4994995, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1292,7 +1292,7 @@ MonoBehaviour:
   m_FillRect: {fileID: 564726914}
   m_HandleRect: {fileID: 109289394}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 1
   m_MaxValue: 50
   m_WholeNumbers: 0
   m_Value: 18
@@ -1605,10 +1605,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 290024500}
   m_HandleRect: {fileID: 2105928398}
   m_Direction: 0
-  m_MinValue: -80
-  m_MaxValue: 0
+  m_MinValue: 0.001
+  m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: -30
+  m_Value: 0.5
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -1793,7 +1793,7 @@ RectTransform:
   m_Father: {fileID: 812622055}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.625, y: 1}
+  m_AnchorMax: {x: 0.4994995, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2657,11 +2657,10 @@ MonoBehaviour:
 
 
     Main Menu
-    Theme - Retro gaming by YakaStreams https://pixabay.com/music/upbeat-retro-gaming-271301/
+    Theme - Retro gaming by YakaStreams
 
 
-    Game
-    Theme - edm gaming music by sapan4 https://pixabay.com/music/techno-trance-edm-gaming-music-335408/'
+    Game Theme - edm gaming music by sapan4'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2919,6 +2918,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 024e87c76ff5ae14e9859ed299619143, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioMixer: {fileID: 24100000, guid: 4e7f7b996ca5f1847b8b76e17990b0ed, type: 2}
   masterSlider: {fileID: 1335544414}
   musicSlider: {fileID: 1587204881}
   sfxSlider: {fileID: 299258236}
@@ -3229,7 +3229,7 @@ RectTransform:
   m_Father: {fileID: 1948073298}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.36, y: 1}
+  m_AnchorMax: {x: 0.3469388, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4020,8 +4020,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 97654106}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.625, y: 0}
-  m_AnchorMax: {x: 0.625, y: 1}
+  m_AnchorMin: {x: 0.4994995, y: 0}
+  m_AnchorMax: {x: 0.4994995, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -6389,8 +6389,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 9448046}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.625, y: 0}
-  m_AnchorMax: {x: 0.625, y: 1}
+  m_AnchorMin: {x: 0.4994995, y: 0}
+  m_AnchorMax: {x: 0.4994995, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -6465,7 +6465,7 @@ RectTransform:
   m_Father: {fileID: 86856299}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.625, y: 1}
+  m_AnchorMax: {x: 0.4994995, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -6935,10 +6935,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 1266417614}
   m_HandleRect: {fileID: 740189035}
   m_Direction: 0
-  m_MinValue: -80
-  m_MaxValue: 0
+  m_MinValue: 0.001
+  m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: -30
+  m_Value: 0.5
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -7910,10 +7910,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 328298096}
   m_HandleRect: {fileID: 1260687240}
   m_Direction: 0
-  m_MinValue: -80
-  m_MaxValue: 0
+  m_MinValue: 0.001
+  m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: -30
+  m_Value: 0.5
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -10782,8 +10782,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 166037087}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.625, y: 0}
-  m_AnchorMax: {x: 0.625, y: 1}
+  m_AnchorMin: {x: 0.4994995, y: 0}
+  m_AnchorMax: {x: 0.4994995, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -11181,14 +11181,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2328728401278878991, guid: 8b39bfd121108484d862548d5a2957b2, type: 3}
-      propertyPath: gameMusic
-      value: 
-      objectReference: {fileID: 8300000, guid: ddba3cffc92729840ada32089a835287, type: 3}
-    - target: {fileID: 2328728401278878991, guid: 8b39bfd121108484d862548d5a2957b2, type: 3}
-      propertyPath: menuMusic
-      value: 
-      objectReference: {fileID: 8300000, guid: 2b64296234ba64c4a8dd5535695c3ffc, type: 3}
     - target: {fileID: 7038921344783530328, guid: 8b39bfd121108484d862548d5a2957b2, type: 3}
       propertyPath: m_Name
       value: AudioSystem

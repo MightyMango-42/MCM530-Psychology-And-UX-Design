@@ -307,5 +307,8 @@ MonoBehaviour:
   DefaultAudioMixer: {fileID: 24100000, guid: 4e7f7b996ca5f1847b8b76e17990b0ed, type: 2}
   _musicSource: {fileID: 7892400484381310138}
   _sfxSource: {fileID: 8151289661423640674}
-  menuMusic: {fileID: 0}
-  gameMusic: {fileID: 0}
+  menuMusic: {fileID: 8300000, guid: 2b64296234ba64c4a8dd5535695c3ffc, type: 3}
+  gameMusic: {fileID: 8300000, guid: ddba3cffc92729840ada32089a835287, type: 3}
+  buttonPress: {fileID: 0}
+  collectable: {fileID: 0}
+  jump: {fileID: 0}

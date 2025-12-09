@@ -39,7 +39,6 @@ public class MainMenuManager : MonoBehaviour
     {
         mainMenuPanel.SetActive(false);
         settingsPanel.SetActive(true);
-        settingsManager.OnOpen();
 
         EventSystem.current.SetSelectedGameObject(selectedSettingsButtonObject);
     }

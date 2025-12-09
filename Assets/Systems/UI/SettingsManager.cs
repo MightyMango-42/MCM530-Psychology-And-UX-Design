@@ -1,9 +1,10 @@
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 
 public class SettingsManager : MonoBehaviour
 {
-    AudioManager audioManager;
+    [SerializeField] private AudioMixer audioMixer;
 
     [SerializeField] private Slider masterSlider;
     [SerializeField] private Slider musicSlider;
@@ -13,88 +14,107 @@ public class SettingsManager : MonoBehaviour
     [SerializeField] private Slider gamepadXSlider;
     [SerializeField] private Slider gamepadYSlider;
 
-    private float masterSliderValue;
-    private float musicSliderValue;
-    private float sfxSliderValue;
-    private float mouseXSliderValue;
-    private float mouseYSliderValue;
-    private float gamepadXSliderValue;
-    private float gamepadYSliderValue;
-
-    private void Awake()
-    {
-        audioManager = AudioManager.Instance;
-    }
-
-    public void OnOpen()
-    {
-        masterSlider.value = masterSliderValue;
-        musicSlider.value = musicSliderValue;
-        sfxSlider.value = sfxSliderValue;
-        mouseXSlider.value = mouseXSliderValue;
-        mouseYSlider.value = mouseYSliderValue;
-        gamepadXSlider.value = gamepadXSliderValue;
-        gamepadYSlider.value = gamepadYSliderValue;
-    }
-
     private void OnEnable()
     {
-        LoadPrefs();
+        if (PlayerPrefs.HasKey("MasterVolume")) LoadMasterVolume();
+        else SetMasterVolume();
+
+        if (PlayerPrefs.HasKey("MusicVolume")) LoadMusicVolume();
+        else SetMusicVolume();
+
+        if (PlayerPrefs.HasKey("SFXVolume")) LoadSFXVolume();
+        else SetSFXVolume();
+
+        if (PlayerPrefs.HasKey("MouseXSens")) LoadMouseXSens();
+        else SetPCXSensitivity();
+
+        if (PlayerPrefs.HasKey("MouseYSens")) LoadMouseYSens();
+        else SetPCYSensitivity();
+
+        if (PlayerPrefs.HasKey("GamepadXSens")) LoadGamepadXSens();
+        else SetGamepadXSensitivity();
+
+        if (PlayerPrefs.HasKey("GamepadYSens")) LoadGamePadYSens();
+        else SetGamepadYSensitivity();
     }
 
     #region Setting Functions
 
-    private void LoadPrefs()
+    private void LoadMasterVolume()
     {
-        masterSliderValue = PlayerPrefs.GetFloat("MasterVolume");
-        musicSliderValue = PlayerPrefs.GetFloat("MusicVolume");
-        sfxSliderValue = PlayerPrefs.GetFloat("SFXVolume");
-        mouseXSliderValue = PlayerPrefs.GetFloat("MouseXSens");
-        mouseYSliderValue = PlayerPrefs.GetFloat("MouseYSens");
-        gamepadXSliderValue = PlayerPrefs.GetFloat("GamepadXSens");
-        gamepadYSliderValue = PlayerPrefs.GetFloat("GamepadYSens");
+        masterSlider.value = PlayerPrefs.GetFloat("MasterVolume");
+        SetMasterVolume();
+    }
+    private void LoadMusicVolume()
+    {
+        musicSlider.value = PlayerPrefs.GetFloat("MusicVolume");
+        SetMusicVolume();
+    }
+    private void LoadSFXVolume()
+    {
+        sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume");
+        SetSFXVolume();
+    }
+    private void LoadMouseXSens()
+    {
+        mouseXSlider.value = PlayerPrefs.GetFloat("MouseXSens");
+        SetPCXSensitivity();
+    }
+    private void LoadMouseYSens()
+    {
+        mouseYSlider.value = PlayerPrefs.GetFloat("MouseYSens");
+        SetPCYSensitivity();
+    }
+    private void LoadGamepadXSens()
+    {
+        gamepadXSlider.value = PlayerPrefs.GetFloat("GamepadXSens");
+        SetGamepadXSensitivity();
+    }
+    private void LoadGamePadYSens()
+    {
+        gamepadYSlider.value = PlayerPrefs.GetFloat("GamepadYSens");
+        SetGamepadYSensitivity();
     }
 
-    public void SetMasterVolume(float volume)
+    public void SetMasterVolume()
     {
-        audioManager.DefaultAudioMixer.SetFloat("MasterVolume", volume);
-        PlayerPrefs.SetFloat("MasterVolume", volume);
+        float volume = Mathf.Log10(masterSlider.value) * 20;
+        audioMixer.SetFloat("MasterVolume", volume);
+        PlayerPrefs.SetFloat("MasterVolume", masterSlider.value);
     }
 
-    public void SetMusicVolume(float volume)
+    public void SetMusicVolume()
     {
-        audioManager.DefaultAudioMixer.SetFloat("MusicVolume", volume);
-        PlayerPrefs.SetFloat("MusicVolume", volume);
+        float volume = Mathf.Log10(musicSlider.value) * 20;
+        audioMixer.SetFloat("MusicVolume", volume);
+        PlayerPrefs.SetFloat("MusicVolume", masterSlider.value);
     }
 
-    public void SetSFXVolume(float volume)
+    public void SetSFXVolume()
     {
-        audioManager.DefaultAudioMixer.SetFloat("SFXVolume", volume);
-        PlayerPrefs.SetFloat("SFXVolume", volume);
+        float volume = Mathf.Log10(sfxSlider.value) * 20;
+        audioMixer.SetFloat("SFXVolume", volume);
+        PlayerPrefs.SetFloat("SFXVolume", masterSlider.value);
     }
 
-    public void SetPCXSensitivity(float sensitivity)
+    public void SetPCXSensitivity()
     {
-        Debug.Log($"New PC X Sens: {sensitivity}");
-        PlayerPrefs.SetFloat("MouseXSens", sensitivity);
+        PlayerPrefs.SetFloat("MouseXSens", mouseXSlider.value);
     }
 
-    public void SetPCYSensitivity(float sensitivity)
+    public void SetPCYSensitivity()
     {
-        Debug.Log($"New PC Y Sens: {sensitivity}");
-        PlayerPrefs.SetFloat("MouseYSens", sensitivity);
+        PlayerPrefs.SetFloat("MouseYSens", mouseYSlider.value);
     }
 
-    public void SetGamepadXSensitivity(float sensitivity)
+    public void SetGamepadXSensitivity()
     {
-        Debug.Log($"New Gamepad X Sens: {sensitivity}");
-        PlayerPrefs.SetFloat("GamepadXSens", sensitivity);
+        PlayerPrefs.SetFloat("GamepadXSens", gamepadXSlider.value);
     }
 
-    public void SetGamepadYSensitivity(float sensitivity)
+    public void SetGamepadYSensitivity()
     {
-        Debug.Log($"New Gamepad Y Sens: {sensitivity}");
-        PlayerPrefs.SetFloat("GamepadYSens", sensitivity);
+        PlayerPrefs.SetFloat("GamepadYSens", gamepadYSlider.value);
     }
 
     #endregion

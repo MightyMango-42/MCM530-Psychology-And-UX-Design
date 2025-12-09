@@ -78,10 +78,10 @@ public class PlayerController : MonoBehaviour
     {
         inputHandler = PlayerInputHandler.Instance;
 
-        RegisterCallbacks();
-
         rb.freezeRotation = true;
         playerHeight = transform.localScale.y;
+
+        RegisterCallbacks();
     }
 
     private void Update()
