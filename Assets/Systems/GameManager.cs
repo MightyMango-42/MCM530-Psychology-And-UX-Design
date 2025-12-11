@@ -48,6 +48,7 @@ public class GameManager : MonoBehaviour
         ResumeGame();
 
         SceneManager.LoadScene(sceneToLoad);
+        AudioManager.Instance.StopAllAudio();
     }
     public void LoadNextScene()
     {

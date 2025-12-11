@@ -78,10 +78,10 @@ public class PlayerController : MonoBehaviour
     {
         inputHandler = PlayerInputHandler.Instance;
 
-        RegisterCallbacks();
-
         rb.freezeRotation = true;
         playerHeight = transform.localScale.y;
+
+        RegisterCallbacks();
     }
 
     private void Update()
@@ -202,6 +202,7 @@ public class PlayerController : MonoBehaviour
         {
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
             rb.AddForce(transform.up * jumpForce * Time.fixedDeltaTime * (generalForceMultiplier / 4), ForceMode.Impulse);
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.jump);
         }
     }
     private bool CheckCanWallRun()
@@ -259,6 +260,8 @@ public class PlayerController : MonoBehaviour
         // Apply the force, dont need to reset yVelocity as it is already done in HandleWallRunning()
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
         rb.AddForce(jumpDirection * Time.fixedDeltaTime * generalForceMultiplier, ForceMode.Impulse);
+
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.jump);
     }
 
     private void Slide(InputAction.CallbackContext context)

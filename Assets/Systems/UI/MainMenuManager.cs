@@ -3,18 +3,23 @@ using UnityEngine.EventSystems;
 
 public class MainMenuManager : MonoBehaviour
 {
+    [SerializeField] SettingsManager settingsManager;
+    [Space]
     [SerializeField] GameObject mainMenuPanel;
     [SerializeField] GameObject levelSelectPanel;
     [SerializeField] GameObject creditsPanel;
+    [SerializeField] GameObject settingsPanel;
     [Space]
     [SerializeField] GameObject selectedMenuButtonObject;
     [SerializeField] GameObject selectedLevelButtonObject;
     [SerializeField] GameObject selectedCreditsButtonObject;
+    [SerializeField] GameObject selectedSettingsButtonObject;
 
     private void Start()
     {
         GameManager.Instance.UnlockCursor();
         EventSystem.current.SetSelectedGameObject(selectedMenuButtonObject);
+        AudioManager.Instance.PlayMusic(AudioManager.Instance.menuMusic);
     }
 
     public void OnNewGameClicked()
@@ -30,12 +35,12 @@ public class MainMenuManager : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(selectedLevelButtonObject);
     }
 
-    public void OnReturnButtonClicked()
+    public void OnSettingsClicked()
     {
-        levelSelectPanel.SetActive(false);
-        mainMenuPanel.SetActive(true);
+        mainMenuPanel.SetActive(false);
+        settingsPanel.SetActive(true);
 
-        EventSystem.current.SetSelectedGameObject(selectedMenuButtonObject);
+        EventSystem.current.SetSelectedGameObject(selectedSettingsButtonObject);
     }
 
     public void OnCreditsClicked()
@@ -46,9 +51,25 @@ public class MainMenuManager : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(selectedCreditsButtonObject);
     }
 
+    public void OnReturnButtonClicked()
+    {
+        levelSelectPanel.SetActive(false);
+        mainMenuPanel.SetActive(true);
+
+        EventSystem.current.SetSelectedGameObject(selectedMenuButtonObject);
+    }
+
     public void OnCreditsReturnButtonClicked()
     {
         creditsPanel.SetActive(false);
+        mainMenuPanel.SetActive(true);
+
+        EventSystem.current.SetSelectedGameObject(selectedMenuButtonObject);
+    }
+
+    public void OnSettingsReturnButtonClicked()
+    {
+        settingsPanel.SetActive(false);
         mainMenuPanel.SetActive(true);
 
         EventSystem.current.SetSelectedGameObject(selectedMenuButtonObject);

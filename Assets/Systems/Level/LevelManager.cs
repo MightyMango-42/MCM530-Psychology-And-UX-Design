@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
+    AudioManager audioManager;
     PlayerController player;
     public int TotalScore { get; private set; }
 
@@ -16,6 +17,11 @@ public class LevelManager : MonoBehaviour
     public int currentCheckpoint = -1;
     public int foundCollectables = 0;
     public int CollectableCount { get; private set; }
+
+    private void Awake()
+    {
+        audioManager = AudioManager.Instance;
+    }
 
     private void Start()
     {
@@ -32,6 +38,8 @@ public class LevelManager : MonoBehaviour
         {
             checkpoints[i].ID = i;
         }
+
+        audioManager.PlayMusic(audioManager.gameMusic);
     }
 
     public void RespawnPlayer()
@@ -47,9 +55,9 @@ public class LevelManager : MonoBehaviour
 
         player.playerHUDManager.OpenLevelCompletionPanel(TotalScore, collectableStats);
 
-        player.UnregisterCallbacks();
         player.Freeze();
         player.KillMomentum();
+        player.UnregisterCallbacks();
     }
 
     public void SetNewCheckpoint(Vector3 newSpawnPosition, int newCheckPoint)
