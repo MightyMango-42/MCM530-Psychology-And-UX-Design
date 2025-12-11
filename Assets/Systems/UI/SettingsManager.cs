@@ -14,7 +14,7 @@ public class SettingsManager : MonoBehaviour
     [SerializeField] private Slider gamepadXSlider;
     [SerializeField] private Slider gamepadYSlider;
 
-    private void OnEnable()
+    private void Start()
     {
         if (PlayerPrefs.HasKey("MasterVolume")) LoadMasterVolume();
         else SetMasterVolume();
